@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe de Laboratorio</title>
+<link rel="stylesheet" href="espermatograma_v21_piloto.css">
+</head>
+<body>
+<div class="shell">
+
+  <div class="print-page1-group">
+
+  <header class="top">
+    <div class="title-block" style="display:flex; align-items:center; gap:24px;">
+      <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/logo-pranor-png.webp" alt="Pranor" class="print-logo" style="height:38px; width:auto; display:none;">
+      <div>
+        <h1>Espermatograma</h1>
+        <p id="print-timestamp" style="font-size:9.5px; color:#8ab0cc; letter-spacing:.06em; text-transform:uppercase; margin:0;"></p>
+        <p id="app-version" class="app-version"></p>
+      </div>
+    </div>
+    <div class="print-header-right no-screen" style="display:none">
+      <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/Captura-de-pantalla-2024-12-23-a-las-15.13.42%20(1).png" alt="ISO 9001" class="print-iso-badge">
+      <div class="print-informe-block">
+        <span class="print-informe-lbl">Código de muestra</span>
+        <span class="print-informe-num js-informe-num" id="print-informe-num-display"></span>
+      </div>
+    </div>
+  </header>
+
+  <div id="aviso-invalidos" class="aviso-invalidos no-print" role="alert" style="display:none"></div>
+
+  <div class="top-grid">
+    <div class="patient-fields no-print">
+      <div class="patient-fields-title">Información del paciente</div>
+      <div class="patient-names">
+        <div class="field-row">
+          <div class="field field-span-3">
+            <label for="p-nombre">Paciente</label>
+            <input id="p-nombre" type="text" placeholder="Nombre completo">
+          </div>
+          <div class="field field-span-3">
+            <label for="p-referencia">Referencia</label>
+            <input id="p-referencia" type="text" placeholder="—" value="OMS 2021">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field field-span-3">
+            <label for="p-fecha-nac">Fecha de nacimiento</label>
+            <input id="p-fecha-nac" type="date" oninput="calcEdad()">
+          </div>
+          <div class="field field-span-1">
+            <label for="p-edad">Edad</label>
+            <input id="p-edad" type="text" placeholder="—" readonly style="background:#F5F6F8; color:var(--ink-soft); cursor:default;">
+          </div>
+          <div class="field field-span-2">
+            <label for="p-abstinencia">Abstinencia eyaculatoria</label>
+            <div class="macro-input-group">
+              <input id="p-abstinencia" type="number" min="0" placeholder="días">
+              <div class="macro-stepper">
+                <button type="button" class="macro-stepper-btn" aria-label="Restar" onclick="stepCard('p-abstinencia', -1)">–</button>
+                <div class="macro-stepper-divider"></div>
+                <button type="button" class="macro-stepper-btn" aria-label="Sumar" onclick="stepCard('p-abstinencia', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field field-span-3">
+            <label for="p-conyuge">Cónyuge</label>
+            <input id="p-conyuge" type="text" placeholder="Nombre completo">
+          </div>
+          <div class="field field-span-3">
+            <label for="p-medico">Médico</label>
+            <input id="p-medico" type="text" placeholder="Nombre del doctor">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field field-span-2">
+            <label for="p-institucion">Institución</label>
+            <select class="input-box" id="p-institucion">
+              <option value="">—</option>
+              <optgroup label="Lima">
+                <option value="Concebir - San Isidro">Concebir - San Isidro</option>
+                <option value="Concebir - Los Olivos">Concebir - Los Olivos</option>
+                <option value="Concebir - San Miguel">Concebir - San Miguel</option>
+                <option value="Concebir - Santa Anita">Concebir - Santa Anita</option>
+                <option value="Concebir - Breña">Concebir - Breña</option>
+                <option value="Concebir - San Juan de Miraflores">Concebir - San Juan de Miraflores</option>
+                <option value="Concebir - San Juan de Lurigancho">Concebir - San Juan de Lurigancho</option>
+              </optgroup>
+              <optgroup label="Provincias">
+                <option value="Concebir - Arequipa">Concebir - Arequipa</option>
+                <option value="Concebir - Trujillo">Concebir - Trujillo</option>
+                <option value="Concebir - Chiclayo">Concebir - Chiclayo</option>
+                <option value="Concebir - Ica">Concebir - Ica</option>
+                <option value="Concebir - Cajamarca">Concebir - Cajamarca</option>
+                <option value="Concebir - Huánuco">Concebir - Huánuco</option>
+                <option value="Concebir - Tacna">Concebir - Tacna</option>
+                <option value="Concebir - Huancayo">Concebir - Huancayo</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="field field-span-2">
+            <label for="p-informe">Código de muestra</label>
+            <input id="p-informe" type="text" placeholder="ej. 0143">
+          </div>
+          <div class="field field-span-2">
+            <label for="p-tipo-muestra">Tipo de muestra</label>
+            <select class="input-box" id="p-tipo-muestra">
+              <option value="">—</option>
+              <option value="seminal">Seminal</option>
+              <option value="eyaculacion-retrograda">Eyaculación retrógrada</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field field-span-3">
+            <label for="p-operador">Código del operador</label>
+            <input id="p-operador" type="text" placeholder="—">
+          </div>
+          <div class="field field-span-3">
+            <label for="p-fecha">Fecha</label>
+            <input id="p-fecha" type="date">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field field-span-2">
+            <label for="p-hora-emision">Hora de emisión</label>
+            <input id="p-hora-emision" type="time">
+          </div>
+          <div class="field field-span-2">
+            <label for="p-hora-recepcion">Hora de recepción</label>
+            <input id="p-hora-recepcion" type="time">
+          </div>
+          <div class="field field-span-2">
+            <label for="p-hora-procesamiento">Hora de procesamiento</label>
+            <input id="p-hora-procesamiento" type="time">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--TOPGRID_MACROS_PLACEHOLDER-->
+
+    <!-- TABLA PACIENTE SOLO PARA PDF -->
+    <div class="print-patient-table print-only" style="display:none">
+      <div class="ppt-row-top">
+        <div class="print-patient-cell">
+          <span class="pc-lbl">Nombre del paciente</span>
+          <span class="pc-val" id="pp-nombre"></span>
+          <span class="pc-val" id="pp-edad-line" style="font-size:11px; font-weight:500; color:#555;"></span>
+        </div>
+        <div class="print-patient-cell">
+          <span class="pc-lbl">Nombre del c&#243;nyuge</span>
+          <span class="pc-val" id="pp-conyuge"></span>
+        </div>
+        <div class="print-patient-cell">
+          <span class="pc-lbl">Días de abstinencia</span>
+          <span class="pc-val" id="pp-abstinencia-display"></span>
+        </div>
+        <div class="print-patient-cell">
+          <span class="pc-lbl">Tipo de muestra</span>
+          <span class="pc-val" id="pp-tipo-muestra"></span>
+        </div>
+      </div>
+      <div class="ppt-row-bottom">
+        <div class="ppt-col-half">
+          <div class="ppt-subrow ppt-subrow-sede">
+            <div class="print-patient-cell ppc-meta ppt-sede-medico">
+              <div class="ppt-sede-line">
+                <span class="pc-lbl">Sede</span>
+                <span class="pc-val-sm" id="pp-medico"></span>
+              </div>
+              <div class="ppt-sede-line">
+                <span class="pc-lbl">M&#233;dico</span>
+                <span class="pc-val-sm" id="pp-medico-sub-display"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ppt-col-half">
+          <div class="ppt-subrow ppt-subrow-fecha">
+            <div class="print-patient-cell ppc-meta ppt-fecha-horas">
+              <div class="ppt-fecha-op-row">
+                <div class="ppt-sede-line ppt-inline-line ppt-fecha-op-item">
+                  <span class="pc-lbl">Fecha:</span>
+                  <span class="pc-val-sm" id="pp-fecha-display"></span>
+                </div>
+                <div class="ppt-sede-line ppt-inline-line ppt-fecha-op-item">
+                  <span class="pc-lbl">Operador:</span>
+                  <span class="pc-val-sm" id="pp-operador-display"></span>
+                </div>
+                <div class="ppt-sede-line ppt-inline-line ppt-fecha-op-item">
+                  <span class="pc-lbl">Referencia:</span>
+                  <span class="pc-val-sm" id="pp-referencia-display"></span>
+                </div>
+              </div>
+              <div class="ppt-sede-line ppt-horas-block">
+                <div class="ppt-horas-grid">
+                  <div class="ppt-horas-item">
+                    <span class="pc-lbl">Hora de emisión</span>
+                    <span class="pc-val-sm" id="pp-hora-e">—</span>
+                  </div>
+                  <div class="ppt-horas-item">
+                    <span class="pc-lbl">Hora de recepción</span>
+                    <span class="pc-val-sm" id="pp-hora-r">—</span>
+                  </div>
+                  <div class="ppt-horas-item">
+                    <span class="pc-lbl">Hora de procesamiento</span>
+                    <span class="pc-val-sm" id="pp-hora-p">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="macros-bar">
+      <div class="macros-bar-title">Datos macroscópicos</div>
+      <div class="macros-bar-fields">
+        <div class="macro-field">
+          <label>Volumen (ml)</label>
+          <div class="macro-input-group">
+            <input class="input-box" type="number" id="m-a-print" step="0.01" min="0" oninput="syncVolumenFromMacros()">
+            <div class="macro-stepper">
+              <button type="button" class="macro-stepper-btn" aria-label="Restar" onclick="stepCard('m-a-print', -0.01)">–</button>
+              <div class="macro-stepper-divider"></div>
+              <button type="button" class="macro-stepper-btn" aria-label="Sumar" onclick="stepCard('m-a-print', 0.01)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="macro-field">
+          <label>pH</label>
+          <div class="macro-input-group">
+            <input class="input-box" type="number" id="m-ph" step="0.1" min="5.0" oninput="computeAll()">
+            <div class="macro-stepper">
+              <button type="button" class="macro-stepper-btn" aria-label="Restar" onclick="stepCard('m-ph', -0.1)">–</button>
+              <div class="macro-stepper-divider"></div>
+              <button type="button" class="macro-stepper-btn" aria-label="Sumar" onclick="stepCard('m-ph', 0.1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="macro-field">
+          <label>Licuefacción</label>
+          <select class="input-box" id="m-licuefaccion">
+            <option value="">—</option>
+            <option value="completa">Completa</option>
+            <option value="incompleta">Incompleta</option>
+          </select>
+        </div>
+        <div class="macro-field">
+          <label>Apariencia</label>
+          <select class="input-box" id="m-apariencia">
+            <option value="">—</option>
+            <option value="normal">Normal</option>
+            <option value="translucido">Translúcido</option>
+            <option value="amarillento">Amarillento</option>
+            <option value="hematico">Hemático</option>
+          </select>
+        </div>
+        <div class="macro-field">
+          <label>Viscosidad</label>
+          <select class="input-box" id="m-viscosidad">
+            <option value="">—</option>
+            <option value="normal">Normal</option>
+            <option value="aumentada">Aumentada</option>
+            <option value="muy-aumentada">Muy viscosa</option>
+          </select>
+        </div>
+        <div class="macro-field">
+          <label>Aglutinación</label>
+          <select class="input-box" id="m-aglutinacion">
+            <option value="">—</option>
+            <option value="ausente">Ausente</option>
+            <option value="leve">Leve</option>
+            <option value="moderada">Moderada</option>
+            <option value="severa">Severa</option>
+          </select>
+        </div>
+        <div class="macro-field">
+          <label>Hematíes</label>
+          <select class="input-box" id="m-globulos-rojos">
+            <option value="">—</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <div class="macro-field">
+          <label>Debris</label>
+          <select class="input-box" id="m-debris">
+            <option value="">—</option>
+            <option value="+">+</option>
+            <option value="++">++</option>
+            <option value="+++">+++</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panels">
+
+    <!-- PANEL IZQUIERDO: PAGINADO -->
+    <div class="panel no-print">
+      <div class="page-indicator">
+        <span class="page-title" id="current-page-title">Macroscópicos</span>
+        <div class="page-dots" id="page-dots"></div>
+      </div>
+
+      <!-- PÁGINA 2: GENERAL -->
+      <div class="page-content" id="page-2">
+        <div class="cards-grid col-2" style="margin-top:10px">
+          <div class="card">
+            <div class="card-label">Volumen inicial</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-a" step="0.01" oninput="computeAll()">
+                <span class="card-unit">ml</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-a', -0.01)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-a', 0.01)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Concentración de espermatozoides</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-b" step="0.01" oninput="computeAll()">
+                <span class="card-unit">x10⁶ / ml</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-b', -0.01)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-b', 0.01)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 3: MOTILIDAD -->
+      <div class="page-content" id="page-3">
+        <div class="cards-grid col-2" style="margin-top:10px">
+          <div class="card">
+            <div class="card-label">Motilidad progresiva</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-c" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-c', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-c', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Motilidad no progresiva</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-d" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-d', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-d', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Inmótiles</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-e" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-e', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-e', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card auto-card">
+            <div class="card-label">Total contado</div>
+            <div class="card-input-row">
+              <input class="card-input auto-input" type="number" id="m-f" readonly tabindex="-1">
+              <span class="card-unit">N° espz</span>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 4: MORFOLOGÍA -->
+      <div class="page-content" id="page-4">
+        <div class="cards-grid col-2" style="margin-top:10px">
+          <div class="card">
+            <div class="card-label">Morfología normal</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-g" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-g', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-g', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Anomalías de cabeza</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-h" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-h', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-h', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Anomalías de pieza media</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-i" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-i', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-i', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Anomalías de flagelo</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-j" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-j', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-j', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Inmaduros</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-k" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-k', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-k', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Otras formas</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-l" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-l', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-l', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card auto-card" style="grid-column:1/-1">
+            <div class="card-label">Total contado</div>
+            <div class="card-input-row">
+              <input class="card-input auto-input" type="number" id="m-m" readonly tabindex="-1">
+              <span class="card-unit">N° espz</span>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 5: VITALIDAD -->
+      <div class="page-content" id="page-5">
+        <div class="cards-grid col-3" style="margin-top:10px">
+          <div class="card">
+            <div class="card-label">Espermatozoides vivos</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-n" step="1" oninput="computeAll()">
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-n', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-n', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Espermatozoides no vivos</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-o" step="1" oninput="computeAll()">
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-o', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-o', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card auto-card">
+            <div class="card-label">Total espermatozoides contados</div>
+            <div class="card-input-row">
+              <input class="card-input auto-input" type="number" id="m-p" readonly tabindex="-1">
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 6: LEUCOCITOS -->
+      <div class="page-content" id="page-6">
+        <div class="cards-grid col-3" style="margin-top:10px">
+          <div class="card" style="grid-column:1/-1">
+            <div class="card-label">Células redondas</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-q" step="0.01" oninput="computeAll()">
+                <span class="card-unit">x10⁶ / ml</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-q', -0.01)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-q', 0.01)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cards-grid col-3" style="margin-top:18px">
+          <div class="card">
+            <div class="card-label">Leucocitos</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-leuco" step="1" oninput="computeAll()">
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-leuco', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-leuco', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">No leucocitos</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-no-leuco" step="1" oninput="computeAll()">
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-no-leuco', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-no-leuco', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card auto-card">
+            <div class="card-label">Total contado</div>
+            <div class="card-input-row">
+              <input class="card-input auto-input" type="number" id="m-leuco-total" readonly tabindex="-1">
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- NAV -->
+      <div class="page-nav no-print">
+        <button class="nav-btn" id="btn-prev" onclick="changePage(-1)" disabled>← Anterior</button>
+        <button class="nav-btn next" id="btn-next" onclick="changePage(1)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PANEL DERECHO: DATOS PROCESADOS -->
+    <div class="panel screen-hidden">
+      <div class="panel-head">Datos microscópicos</div>
+
+      <div class="section-head">Concentración espermática</div>
+      <div class="row">
+        <div class="row-text">
+          <div class="row-label">Concentración de espermatozoides</div>
+          
+        </div>
+        <span class="out-value" id="out-b">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text">
+          <div class="row-label">Recuento total</div>
+          
+        </div>
+        <span class="out-value" id="out-aa">—</span>
+      </div>
+
+      <div class="section-head">Motilidad espermática</div>
+      <div class="row">
+        <div class="row-text">
+          <div class="row-label">Motilidad total</div>
+          
+        </div>
+        <span class="out-value" id="out-motTotal">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text">
+          <div class="row-label">Motilidad progresiva</div>
+          
+        </div>
+        <span class="out-value" id="out-bb">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text">
+          <div class="row-label">Motilidad no progresiva</div>
+          
+        </div>
+        <span class="out-value" id="out-motNoProg">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text">
+          <div class="row-label">Inmótiles</div>
+          
+        </div>
+        <span class="out-value" id="out-noMot">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text">
+          <div class="row-label">Motilidad progresiva total</div>
+          
+        </div>
+        <span class="out-value" id="out-motProgTotal">—</span>
+      </div>
+
+      <div class="chart-wrap" id="motility-chart-wrap">
+        <svg id="motility-pie" viewBox="0 0 320 260" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-number-print print-only">Página 1 de 3</div>
+
+  </div><!-- fin print-page1-group -->
+
+  <div class="page2-block panel screen-hidden" style="page-break-before:always; break-before:page;">
+
+      <div class="page-print-header print-only">
+        <div class="title-block">
+          <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/logo-pranor-png.webp" alt="Pranor" class="print-logo" style="height:38px; width:auto; display:none;">
+          <h1>Espermatograma</h1>
+        </div>
+        <div class="print-header-right no-screen" style="display:none">
+          <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/Captura-de-pantalla-2024-12-23-a-las-15.13.42%20(1).png" alt="ISO 9001" class="print-iso-badge">
+          <div class="print-informe-block">
+            <span class="print-informe-lbl">Código de muestra</span>
+            <span class="print-informe-num js-informe-num"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head">Morfología espermática</div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Morfología normal</div></div>
+        <span class="out-value" id="out-at">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Anomalías de cabeza</div></div>
+        <span class="out-value" id="out-anomCabeza">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Anomalías de pieza media</div></div>
+        <span class="out-value" id="out-anomPieza">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Anomalías de flagelo</div></div>
+        <span class="out-value" id="out-anomFlagelo">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Inmaduros</div></div>
+        <span class="out-value" id="out-inmaduros">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Otras formas</div></div>
+        <span class="out-value" id="out-otros">—</span>
+      </div>
+      <div class="chart-wrap" style="margin:8px 0 4px;">
+        <svg id="morphology-pie" viewBox="0 0 320 260" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="section-head">Índices</div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Índice de teratozoospermia</div></div>
+        <span class="out-value" id="out-tzi">—</span>
+      </div>
+
+      <div class="section-head">Vitalidad espermática</div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Vitalidad</div></div>
+        <span class="out-value" id="out-amp">—</span>
+      </div>
+
+      <div class="section-head">Células redondas</div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Células redondas</div></div>
+        <span class="out-value" id="out-celulas-redondas">—</span>
+      </div>
+
+      <div class="section-head">Leucocitos</div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Leucocitos</div></div>
+        <span class="out-value" id="out-leucocitos">—</span>
+      </div>
+
+      <div class="page-number-print print-only">Página 2 de 3</div>
+
+  </div><!-- fin page2-block -->
+
+  <!-- PÁGINA 3 DEL PDF: Observaciones, Conclusión, Valores, Firma -->
+  <div class="print-page-break">
+
+  <div class="page-print-header print-only">
+    <div class="title-block">
+      <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/logo-pranor-png.webp" alt="Pranor" class="print-logo" style="height:38px; width:auto; display:none;">
+      <h1>Espermatograma</h1>
+    </div>
+    <div class="print-header-right no-screen" style="display:none">
+      <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/Captura-de-pantalla-2024-12-23-a-las-15.13.42%20(1).png" alt="ISO 9001" class="print-iso-badge">
+      <div class="print-informe-block">
+        <span class="print-informe-lbl">Código de muestra</span>
+        <span class="print-informe-num js-informe-num"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA VALORES NORMALES OMS 2021 -->
+  <div class="valores-normales-box screen-hidden">
+    <div class="vn-title">Valores de referencia OMS 2021</div>
+    <table class="vn-table">
+      <tbody>
+        <tr><td>Volumen</td><td>≥ 1.4 ml</td></tr>
+        <tr><td>Concentración</td><td>≥ 16 × 10⁶/ml &nbsp;·&nbsp; total ≥ 39 × 10⁶/eyaculado</td></tr>
+        <tr><td>Motilidad total</td><td>≥ 42 %</td></tr>
+        <tr><td>Motilidad progresiva</td><td>≥ 30 %</td></tr>
+        <tr><td>Vitalidad</td><td>≥ 54 %</td></tr>
+        <tr><td>Morfología normal</td><td>≥ 4 %</td></tr>
+        <tr><td>Células redondas</td><td>&lt; 1.0 × 10⁶/ml</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PERFIL SEMINAL COMPARADO CON OMS 2021 -->
+  <div class="perfil-seminal-block screen-hidden">
+    <div class="section-head" style="margin-top:14px;">Perfil seminal comparado con OMS 2021</div>
+    <div id="bar-chart-wrap" class="print-only">
+      <svg id="bar-chart" viewBox="0 0 480 220" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;"></svg>
+    </div>
+  </div>
+
+  <!-- SCORE SEMINAL (cuadro propio) -->
+  <div class="report-footer-sections">
+    <div class="report-section score-seminal-section screen-hidden">
+      <div class="report-section-title score-title-with-legend"><span>Score Seminal:</span><span class="score-legend-inline">1,0 = VN-OMS-21 &nbsp;/&nbsp; 0,1 ~ 10% VN-OMS-21</span></div>
+      <div class="report-section-body" style="padding:8px 0; font-size:13px; line-height:1.7; min-height:64px;">
+        <div class="score-row"><span class="score-label">Concentración</span><span class="score-value" id="score-conc">—</span></div>
+        <div class="score-row"><span class="score-label">Motilidad</span><span class="score-value" id="score-mot">—</span></div>
+        <div class="score-row"><span class="score-label">Vitalidad</span><span class="score-value" id="score-vit">—</span></div>
+        <div class="score-row"><span class="score-label">Morfología</span><span class="score-value" id="score-morf">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCLUSIÓN CLÍNICA + OBSERVACIONES (cuadro propio) -->
+  <div class="report-footer-sections">
+    <div class="clinical-row">
+      <div class="report-section conclusion-standalone screen-hidden">
+        <div class="report-section-title">Conclusión clínica:</div>
+        <div class="report-section-body" id="conclusion-body" style="padding:8px 0; font-size:13px; line-height:1.7; min-height:64px;"></div>
+      </div>
+      <div class="report-section">
+        <div class="report-section-title">Observaciones:</div>
+        <div class="report-section-body" style="padding:8px 0; font-size:13px; line-height:1.7; min-height:64px;">
+          <textarea id="obs-texto" class="observaciones-textarea no-print" placeholder="Anotaciones clínicas del profesional..." oninput="syncObs()"></textarea>
+          <div class="observaciones-print" id="obs-print"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions no-print">
+    <button class="primary" id="btn-print" onclick="document.getElementById('print-timestamp').textContent = new Date().toLocaleString('es-PE'); window.print();">Imprimir / Guardar PDF</button>
+    <button class="ghost" onclick="resetAll()">Nueva muestra</button>
+    <button class="ghost" id="btn-demo" onclick="loadDemo()" style="display:none;border-color:#1F4E96;color:#1F4E96;" title="Carga valores dentro de rangos normales OMS 2021">Demo (valores normales)</button>
+  </div>
+
+  <div class="nota-final-box screen-hidden">
+    <b>Nota:</b> El resultado de este análisis sólo es válido para la muestra emitida. La muestra de semen fue emitida en un acto no supervisado por el laboratorio.
+  </div>
+
+  <div class="firma-section">
+    <div class="firma-linea"></div>
+    <input id="firma-nombre" class="firma-input firma-input-nombre" type="text" placeholder="Nombre del profesional" value="" title="Haz clic para editar el nombre" oninput="syncFirma()">
+    <span class="firma-print-nombre" id="firma-print-nombre">Nombre del profesional</span>
+    <input id="firma-cargo" class="firma-input firma-input-dato" type="text" placeholder="Cargo (ej. Biólogo)" value="" title="Haz clic para editar el cargo" oninput="syncFirma()">
+    <span class="firma-print-dato" id="firma-print-cargo">Biólogo</span>
+    <input id="firma-cbp" class="firma-input firma-input-dato" type="text" placeholder="C.B.P. 0000" value="" title="Haz clic para editar el codigo" oninput="syncFirma()">
+    <span class="firma-print-dato" id="firma-print-cbp">C.B.P. 0000</span>
+  </div>
+
+  <div class="page-number-print print-only">Página 3 de 3</div>
+
+  </div><!-- fin print-page-break -->
+
+  <footer></footer>
+</div>
+
+<script src="espermatograma_v21_piloto.js"></script>
+</body>
+</html>
