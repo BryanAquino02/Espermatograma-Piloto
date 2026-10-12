@@ -1113,7 +1113,7 @@
       padding-right: 24px !important;
       border-bottom: 1px solid #ccc !important;
       margin-bottom: 6px !important;
-      margin-bottom: 14px !important;
+      margin-bottom: 24px !important;
     }
 
     /* ── SECCIÓN CABECERA DENTRO DEL PANEL ── */
@@ -1583,7 +1583,7 @@
   .print-page1-group{
     justify-content: flex-start !important;
     gap: 6mm !important;
-    padding-top: 19mm !important;
+    padding-top: 23mm !important;
   }
   .print-page1-group > .panels{ margin-top: 8mm !important; }
 }
@@ -1601,7 +1601,7 @@
     position: absolute !important;
     bottom: 100% !important;
     right: 10mm !important;
-    margin-bottom: 14px !important;
+    margin-bottom: 26px !important;
   }
 }
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
