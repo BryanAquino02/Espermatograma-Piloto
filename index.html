@@ -851,5 +851,12 @@
 <div class="print-footer print-only"><b>pranor.</b>com.pe</div>
 
 <script src="espermatograma_v21_piloto.js"></script>
+<script>
+  (function(){
+    var m = document.cookie.match(/(?:^|;\s*)pranor_usuario=([^;]+)/);
+    var el = document.getElementById('session-user');
+    if (m && el) el.textContent = decodeURIComponent(m[1]);
+  })();
+</script>
 </body>
 </html>
