@@ -1541,6 +1541,23 @@
     filter: none !important;
   }
 }
+
+/* Títulos "Datos macroscópicos" y "Datos microscópicos" como banda de color en el PDF */
+@media print {
+  .macros-bar-title, .panel-head{
+    background: #0E7C9B !important;
+    color: #FFFFFF !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+    text-transform: uppercase !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 4px 10px !important;
+  }
+  .macros-bar-title{ margin: 8px 8px 0 !important; }
+  .panel-head{ margin: 0 0 6px !important; }
+}
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
 #motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
 @media print {
