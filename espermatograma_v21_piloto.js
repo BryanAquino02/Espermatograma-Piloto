@@ -740,7 +740,10 @@ function resetAll(){
 }
 
 function syncObs(){
-  document.getElementById('obs-print').textContent = document.getElementById('obs-texto').value;
+  const txt = document.getElementById('obs-texto');
+  const lineas = txt.value.split('\n');
+  if(lineas.length > 6) txt.value = lineas.slice(0, 6).join('\n');
+  document.getElementById('obs-print').textContent = txt.value;
 }
 
 function syncFirma(){
