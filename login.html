@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingresar — Laboratorio Pranor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F6F8; --panel:#FFFFFF; --ink:#16213D; --ink-soft:#5C6577;
+    --line:#E1E4EA; --accent:#0E7C7B; --band:#0d6e8a; --error:#B42318; --error-bg:#FEF3F2;
+  }
+  *{ box-sizing:border-box; }
+  html, body{ height:100%; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', Arial, sans-serif; -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column;
+  }
+  main{ flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px; }
+  .card{
+    width:100%; max-width:380px; background:var(--panel);
+    border:1px solid var(--line); border-radius:12px; padding:32px 30px 28px;
+  }
+  .logo{ display:block; height:44px; width:auto; margin:0 auto 22px; }
+  h1{ font-size:20px; font-weight:700; letter-spacing:-0.01em; margin:0 0 4px; text-align:center; }
+  .sub{ font-size:13px; color:var(--ink-soft); margin:0 0 24px; text-align:center; }
+  label{ display:block; font-size:13px; font-weight:600; margin:0 0 6px; }
+  input{
+    width:100%; font:inherit; font-size:15px; color:var(--ink);
+    border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:#fff;
+  }
+  input:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  #usuario{ text-transform:uppercase; letter-spacing:.04em; }
+  #usuario::placeholder{ text-transform:none; letter-spacing:0; }
+  .field{ margin-bottom:16px; }
+  .hint{ font-size:12px; color:var(--ink-soft); margin:6px 0 0; }
+  .error{
+    display:none; font-size:13px; color:var(--error); background:var(--error-bg);
+    border:1px solid #FECDCA; border-radius:8px; padding:9px 12px; margin:0 0 16px;
+  }
+  .error.show{ display:block; }
+  button{
+    width:100%; margin-top:6px; font:inherit; font-size:15px; font-weight:600; color:#fff;
+    background:var(--accent); border:none; border-radius:8px; padding:11px 16px; cursor:pointer;
+  }
+  button:hover{ background:#0C6968; }
+  button:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+  footer{ background:var(--band); color:#cfe8f0; text-align:center; font-size:12px; padding:8px 0; }
+  footer strong{ color:#fff; }
+</style>
+</head>
+<body>
+<main>
+  <form class="card" method="POST" action="/login" autocomplete="on">
+    <img class="logo" src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/logo-pranor-png.webp" alt="Pranor">
+    <h1>Laboratorio de andrología</h1>
+    <p class="sub">Espermatograma y capacitación espermática</p>
+
+    <div class="error" id="error" role="alert"></div>
+
+    <div class="field">
+      <label for="usuario">Usuario</label>
+      <input id="usuario" name="usuario" type="text" placeholder="Ej. SI-01" required
+             autocomplete="username" autocapitalize="characters" spellcheck="false" autofocus>
+      <p class="hint">Código de tu sede y número de operador.</p>
+    </div>
+
+    <div class="field">
+      <label for="contrasena">Contraseña de la sede</label>
+      <input id="contrasena" name="contrasena" type="password" required autocomplete="current-password">
+    </div>
+
+    <button type="submit">Ingresar</button>
+  </form>
+</main>
+<footer><strong>pranor</strong>.com.pe</footer>
+
+<script>
+  (function(){
+    var p = new URLSearchParams(location.search);
+    var u = p.get('u');
+    if (u) {
+      document.getElementById('usuario').value = u;
+      document.getElementById('contrasena').focus();
+    }
+    var mensajes = {
+      formato: 'El usuario debe tener el código de sede, un guion y dos dígitos. Ejemplo: SI-01.',
+      datos: 'Usuario o contraseña incorrectos. Revisa el código de sede y la contraseña.'
+    };
+    var e = p.get('error');
+    if (e && mensajes[e]) {
+      var box = document.getElementById('error');
+      box.textContent = mensajes[e];
+      box.classList.add('show');
+    }
+  })();
+</script>
+</body>
+</html>
