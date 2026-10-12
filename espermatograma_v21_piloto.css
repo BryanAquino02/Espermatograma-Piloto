@@ -1572,6 +1572,13 @@
     border-radius: 0 !important;
   }
 }
+
+/* Tabla "Valores de referencia OMS 2021": datos centrados */
+.vn-table td{ text-align: center !important; }
+.vn-table td:first-child{ width: 50% !important; }
+@media print {
+  .vn-table td{ padding: 2px 6px !important; }
+}
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
 #motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
 @media print {
