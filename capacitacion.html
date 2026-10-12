@@ -1110,12 +1110,157 @@
     }
   }
 
+  /* =====================================================================
+     ESTILO PDF — IGUALADO AL DISEÑO DEL ESPERMATOGRAMA
+     (bloque al final para que sobrescriba los estilos de impresión previos)
+     ===================================================================== */
+  .print-brand, .print-page-footer{ display:none; }
+  @page{ size:A4; margin:0; }
+  @media print{
+    html, body{ margin:0 !important; padding:0 !important; background:#fff !important; }
+
+    /* Hojas: alto de página completo, pie anclado abajo */
+    .print-sheet, .print-sheet-1, .print-sheet-2{
+      display:flex !important; flex-direction:column !important;
+      min-height:calc(297mm - 4px) !important;
+      padding:0 !important; margin:0 !important;
+      box-sizing:border-box !important;
+    }
+    .print-sheet-1{ break-after:page !important; page-break-after:always !important; }
+    .print-sheet-2{ break-after:auto !important; page-break-after:auto !important; }
+    .shell > footer{ display:none !important; }
+    .print-nota{ display:block !important; }
+
+    /* Franja blanca superior: logo centrado + ISO a la derecha */
+    .print-brand{
+      display:flex !important; align-items:center !important; justify-content:center !important;
+      position:relative !important; height:118px !important; background:#fff !important;
+    }
+    .print-brand .brand-logo{ height:42px !important; width:auto !important; display:block !important; }
+    .print-brand .brand-iso{
+      position:absolute !important; right:40px !important; top:50% !important; transform:translateY(-50%) !important;
+      height:44px !important; width:auto !important; display:block !important;
+    }
+
+    /* Banda de título (hoja 1 y hoja 2 iguales) */
+    header.top, .page-print-header{
+      display:flex !important; justify-content:space-between !important; align-items:center !important;
+      background:#0d6e8a !important; color:#fff !important;
+      min-height:68px !important; padding:14px 66px !important; margin:0 !important; border:none !important;
+    }
+    header.top .print-logo, .page-print-header .print-logo,
+    header.top .print-iso-badge, .page-print-header .print-iso-badge{ display:none !important; }
+    header.top .title-block h1, .page-print-header .title-block h1{
+      font-size:19px !important; font-weight:700 !important; letter-spacing:.14em !important;
+      text-transform:uppercase !important; color:#fff !important; margin:0 0 3px !important;
+    }
+    header.top .title-block p{ color:#9cc3d3 !important; font-size:9.5px !important; letter-spacing:.06em !important; }
+    .print-informe-block{ align-items:flex-end !important; }
+    .print-informe-lbl{ color:#9cc3d3 !important; font-size:9px !important; letter-spacing:.08em !important; }
+    .print-informe-num, .page-print-header .print-informe-num{ font-size:17px !important; color:#fff !important; }
+    .page-print-header{ margin-bottom:22px !important; }
+
+    /* Tarjeta de datos del paciente */
+    .print-patient-table{
+      margin:22px 40px 0 !important;
+      border:1px solid #dde3ec !important; border-radius:10px !important; overflow:hidden !important;
+      background:#fff !important;
+    }
+    .print-patient-cell{ border-right:1px solid #e4e9f0 !important; padding:9px 14px !important; }
+    .ppc-meta.print-patient-cell, .ppc-hora.print-patient-cell{ padding:8px 14px !important; }
+    .print-patient-table .print-patient-cell:nth-child(-n+4){ background:#fff !important; border-top:none !important; }
+    .print-patient-table .ppc-meta:nth-child(n+5),
+    .print-patient-table .ppc-hora{ background:#f0f4f8 !important; border-top:1px solid #dde3ec !important; }
+    .print-patient-cell .pc-lbl{ font-size:8.5px !important; color:#8a9ab5 !important; letter-spacing:.08em !important; }
+    .print-patient-cell .pc-val{ font-size:13.5px !important; color:#0d1b2e !important; }
+    .print-patient-cell .pc-val-sm{ font-size:12.5px !important; font-weight:700 !important; color:#0d1b2e !important; }
+
+    /* Resultados */
+    .panels{ margin-top:22px !important; }
+    .panels .panel:last-child{
+      margin:0 !important; padding:0 40px !important; border-top:none !important;
+    }
+    .panel-head{
+      background:#0e7c9b !important; color:#fff !important; border:none !important; border-radius:5px !important;
+      font-size:11px !important; font-weight:700 !important; letter-spacing:.06em !important; text-transform:uppercase !important;
+      padding:5px 12px !important; margin:0 0 4px !important;
+    }
+    .section-head, .section-head:first-of-type{
+      color:#2a8fa3 !important; font-size:9.5px !important; font-weight:700 !important; letter-spacing:.1em !important;
+      text-transform:uppercase !important; border-top:none !important; border-bottom:1px solid #0e7c9b !important;
+      margin:8px 0 0 !important; padding:6px 0 4px 24px !important;
+    }
+    .row, .row.highlight{
+      position:relative !important;
+      display:grid !important; grid-template-columns:26% 38% 20% 16% !important; align-items:center !important;
+      padding:6px 0 !important; margin:0 !important; border:none !important; border-bottom:1px solid #dfe7ec !important;
+      background:none !important; border-radius:0 !important;
+    }
+    .row .row-text{ grid-column:2 !important; }
+    .row .out-value{ grid-column:3 !important; text-align:center !important; }
+    .row-label{ font-size:12px !important; color:#111 !important; font-weight:400 !important; }
+    .row-label .unit{ font-size:10.5px !important; color:#888 !important; }
+    .out-value{ font-size:12.5px !important; font-weight:700 !important; color:#111 !important; }
+    .row.highlight{ background:#e9f6ef !important; }
+    .row.highlight::before{
+      content:"" !important; position:absolute !important; left:12px !important; top:0 !important; bottom:0 !important;
+      width:3px !important; background:#2e9a5f !important;
+    }
+    .row.highlight .row-label{ font-weight:700 !important; color:#111 !important; font-size:12px !important; }
+    .row.highlight .out-value{ color:#2a8fa3 !important; font-size:12.5px !important; }
+
+    /* Hoja 2: tarjeta destacada y gráfico */
+    .motility-compare-wrap{ padding:0 40px !important; }
+    .rem-post-card{
+      background:#e9f6ef !important; border:1.5px solid #2e9a5f !important; border-radius:10px !important;
+      margin:4px auto 20px !important; padding:12px 22px !important;
+    }
+    .rem-post-label{ color:#111 !important; font-size:10.5px !important; letter-spacing:.06em !important; }
+    .rem-post-value{ color:#2a8fa3 !important; font-family:Arial, Helvetica, sans-serif !important; font-size:16px !important; }
+    .motility-compare-title{
+      background:#0e7c9b !important; color:#fff !important; border-radius:5px !important;
+      font-size:11px !important; letter-spacing:.06em !important; padding:5px 12px !important; margin:0 0 10px !important;
+    }
+
+    /* Observaciones: tarjeta redondeada con barra de título */
+    .obs-section{
+      margin:20px 40px 0 !important; padding:6px 6px 10px !important;
+      border:1px solid #dde3ec !important; border-radius:10px !important; background:#fff !important;
+    }
+    .obs-title{
+      background:#0e7c9b !important; color:#fff !important; border:none !important; border-radius:5px !important;
+      font-size:11px !important; padding:5px 12px !important; margin:0 0 6px !important;
+    }
+    .obs-print{ padding:0 8px !important; }
+
+    .print-nota{
+      margin:20px 40px 0 !important; border-left:4px solid #2e9a5f !important; background:#e9f6ef !important;
+      border-radius:0 6px 6px 0 !important;
+    }
+    .firma-section{ margin:auto 40px 24px !important; }
+
+    /* Pie de página */
+    .print-page-footer{ display:block !important; margin-top:auto !important; }
+    .print-sheet-2 .print-page-footer{ margin-top:0 !important; }
+    .ppf-num{ display:block !important; font-size:9.5px !important; color:#9aa3ad !important; padding:0 40px 12px !important; }
+    .ppf-band{
+      display:block !important; background:#0e7c9b !important; color:#cfe8f0 !important;
+      text-align:center !important; font-size:11px !important; padding:6px 0 !important;
+    }
+    .ppf-band strong{ color:#fff !important; }
+  }
+
 </style>
 </head>
 <body>
 <div class="shell">
 
   <div class="print-sheet print-sheet-1">
+
+  <div class="print-brand" aria-hidden="true">
+    <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/logo-pranor-png.webp" alt="Pranor" class="brand-logo">
+    <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/Captura-de-pantalla-2024-12-23-a-las-15.13.42%20(1).png" alt="ISO 9001" class="brand-iso">
+  </div>
 
   <header class="top">
     <div class="title-block" style="display:flex; align-items:center; gap:24px;">
@@ -1601,10 +1746,20 @@
 
   </div>
 
+  <div class="print-page-footer" aria-hidden="true">
+    <span class="ppf-num">Página 1 de 2</span>
+    <div class="ppf-band"><strong>pranor</strong>.com.pe</div>
+  </div>
+
   </div>
   <!-- FIN HOJA 1 -->
 
   <div class="print-sheet print-sheet-2">
+
+  <div class="print-brand" aria-hidden="true">
+    <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/logo-pranor-png.webp" alt="Pranor" class="brand-logo">
+    <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/Captura-de-pantalla-2024-12-23-a-las-15.13.42%20(1).png" alt="ISO 9001" class="brand-iso">
+  </div>
 
   <div class="page-print-header print-only">
     <div class="title-block">
@@ -1623,7 +1778,7 @@
   <!-- GRÁFICO COMPARATIVO MOTILIDAD -->
   <div class="motility-compare-wrap hide-on-screen">
     <div class="rem-post-card">
-      <span class="rem-post-label">REM POST-CAPACITACIÓN</span>
+      <span class="rem-post-label">Total espermatozoides móviles a inseminar</span>
       <span class="rem-post-value" id="out-rem-post">—</span>
     </div>
     <div class="motility-compare-title">Comparativa de Motilidad</div>
@@ -1651,7 +1806,7 @@
     <button class="ghost" onclick="loadDemo()" style="border-color:#1F4E96;color:#1F4E96;" title="Carga valores dentro de rangos normales OMS 2021">Demo (valores normales)</button>
   </div>
 
-  <div class="print-only" style="margin:30px 24px 0; padding:10px 14px; border-left:4px solid #0d6e8a; background:#f0f7fa; font-size:12px; color:#333; line-height:1.7;">
+  <div class="print-only print-nota" style="margin:30px 24px 0; padding:10px 14px; border-left:4px solid #0d6e8a; background:#f0f7fa; font-size:12px; color:#333; line-height:1.7;">
     <strong>Nota:</strong> El resultado de este análisis sólo es válido para la muestra emitida. La muestra de semen fue emitida en un acto no supervisado por el laboratorio.
   </div>
 
@@ -1664,6 +1819,11 @@
     <div class="firma-nombre print-only" id="firma-nombre-print" style="display:none"></div>
     <div class="firma-dato print-only" id="firma-cargo-print" style="display:none"></div>
     <div class="firma-dato print-only" id="firma-cbp-print" style="display:none"></div>
+  </div>
+
+  <div class="print-page-footer" aria-hidden="true">
+    <span class="ppf-num">Página 2 de 2</span>
+    <div class="ppf-band"><strong>pranor</strong>.com.pe</div>
   </div>
 
   </div>
