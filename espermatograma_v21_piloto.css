@@ -1585,6 +1585,7 @@
     gap: 6mm !important;
     padding-top: 19mm !important;
   }
+  .print-page1-group > .panels{ margin-top: 8mm !important; }
 }
 
 /* Tabla "Valores de referencia OMS 2021": datos centrados */
