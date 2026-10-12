@@ -481,22 +481,35 @@
                 <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-l', 1)">+</button>
               </div>
             </div>
-          </div>
-          <div class="card auto-card">
-            <div class="card-label">Total contado</div>
-            <div class="card-input-row">
-              <input class="card-input auto-input" type="number" id="m-m" readonly tabindex="-1">
-              <span class="card-unit">N° espz</span>
+          <div style="grid-column:1/-1; display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+            <div class="card auto-card">
+              <div class="card-label">Espermatozoides normales</div>
+              <div class="card-input-row">
+                <input class="card-input auto-input" type="number" id="m-esp-normales" readonly tabindex="-1">
+                <span class="card-unit">N° espz</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-label">Espermatozoides anormales</div>
+              <div class="card-input-row">
+                <div class="card-value-box">
+                  <input class="card-input" type="number" id="m-esp-anormales" step="1" oninput="computeAll()">
+                  <span class="card-unit">N° espz</span>
+                </div>
+                <div class="card-stepper">
+                  <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-esp-anormales', -1)">–</button>
+                  <div class="stepper-divider"></div>
+                  <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-esp-anormales', 1)">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="card auto-card">
+              <div class="card-label">Total de anomalías</div>
+              <div class="card-input-row">
+                <input class="card-input auto-input" type="number" id="m-anom-total" readonly tabindex="-1">
+              </div>
             </div>
           </div>
-          <div class="card auto-card">
-            <div class="card-label">Total anomalías</div>
-            <div class="card-input-row">
-              <input class="card-input auto-input" type="number" id="m-anom-total" readonly tabindex="-1">
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- PÁGINA 5: VITALIDAD -->
       <div class="page-content" id="page-5">
