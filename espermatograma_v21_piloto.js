@@ -725,10 +725,10 @@ function resetAll(){
   ['m-a','m-a-print','m-ph','m-licuefaccion','m-apariencia','m-viscosidad','m-aglutinacion',
    'm-globulos-rojos','m-debris',
    'm-b','m-q','m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-n','m-o',
-   'm-leuco','m-no-leuco'].forEach(id=>{
+   'm-esp-anormales','m-leuco','m-no-leuco'].forEach(id=>{
     document.getElementById(id).value = '';
   });
-  ['m-f','m-m','m-p','m-leuco-total'].forEach(id=>{ document.getElementById(id).value = ''; });
+  ['m-f','m-esp-normales','m-anom-total','m-p','m-leuco-total'].forEach(id=>{ document.getElementById(id).value = ''; });
   showPage(0);
   computeAll();
   document.getElementById('obs-texto').value = '';
