@@ -1603,6 +1603,26 @@
     margin-bottom: 26px !important;
   }
 }
+
+/* Pie de página "pranor.com.pe" en cada hoja del PDF */
+@media print {
+  .print-footer{
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 7mm !important;
+    background: #0E7C9B !important;
+    color: #FFFFFF !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+    letter-spacing: .02em !important;
+  }
+  .print-footer b{ font-weight: 700 !important; }
+  .page-number-print{ bottom: 9mm !important; }
+  .print-page-break{ padding-bottom: 9mm !important; }
+}
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
 #motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
 @media print {
