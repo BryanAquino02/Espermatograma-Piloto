@@ -1526,6 +1526,20 @@
     }
   }
 
+/* Logo Pranor a color, arriba de la banda azul (todas las hojas del PDF) */
+@media print {
+  header.top, .page-print-header{
+    position: relative !important;
+    overflow: visible !important;
+  }
+  header.top .print-logo, .page-print-header .print-logo{
+    position: absolute !important;
+    bottom: 100% !important;
+    left: 28px !important;
+    margin-bottom: 6px !important;
+    filter: none !important;
+  }
+}
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
 #motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
 @media print {
