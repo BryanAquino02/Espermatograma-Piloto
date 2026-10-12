@@ -1671,6 +1671,18 @@
     color: #555 !important;
   }
 }
+
+/* Fila 3 de la tabla de paciente: las tres horas con el mismo ancho */
+@media print {
+  .print-patient-table .ppg{ grid-template-columns: repeat(30, 1fr) !important; }
+  .ppg-cell:nth-child(1), .ppg-cell:nth-child(2),
+  .ppg-cell:nth-child(5), .ppg-cell:nth-child(6){ grid-column: span 9 !important; }
+  .ppg-cell:nth-child(3), .ppg-cell:nth-child(4),
+  .ppg-cell:nth-child(7), .ppg-cell:nth-child(8),
+  .ppg-cell:nth-child(9){ grid-column: span 6 !important; }
+  .ppg-cell:nth-child(10), .ppg-cell:nth-child(11),
+  .ppg-cell:nth-child(12){ grid-column: span 8 !important; }
+}
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
 #motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
 @media print {
