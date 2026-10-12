@@ -185,7 +185,7 @@ function drawDonutChart(svg, cx, cy, outerR, slices, emptyText, legendCols){
 /* Barra horizontal apilada al 100 % (reemplaza a la dona de motilidad).
    Segmentos redondeados separados por un pequeño hueco, % dentro de cada
    segmento, eje 0–50–100 % debajo y leyenda centrada. */
-function drawStackedBar(svg, slices, emptyText){
+function drawStackedBar(svg, slices, emptyText, separacionLeyenda){
   while(svg.firstChild) svg.removeChild(svg.firstChild);
 
   const VB_W = 520, VB_H = 130;
@@ -217,7 +217,8 @@ function drawStackedBar(svg, slices, emptyText){
     const w = (s.value / total) * disponible;
     el('rect', { x: x, y: BAR_Y, width: Math.max(w, 1), height: BAR_H,
                  rx: Math.min(RX, w / 2), fill: s.color });
-    if(w >= 34){
+    const etiqueta = s.value.toFixed(0) + '%';
+    if(w >= etiqueta.length * 8 + 8){
       el('text', { x: x + w / 2, y: BAR_Y + BAR_H / 2 + 4.5, 'text-anchor': 'middle',
                    'font-size': '13', 'font-weight': '700', fill: '#FFFFFF' },
          s.value.toFixed(0) + '%');
@@ -237,7 +238,7 @@ function drawStackedBar(svg, slices, emptyText){
   });
 
   // Leyenda centrada (ancho estimado: el panel puede estar oculto y no se puede medir)
-  const SQ = 14, SEP = 8, ENTRE = 28, CHAR_W = 6.4;
+  const SQ = 14, SEP = 8, ENTRE = separacionLeyenda || 28, CHAR_W = 6.4;
   const anchos = visibles.map(s => SQ + SEP + s.label.length * CHAR_W);
   const totalLeyenda = anchos.reduce((a, b) => a + b, 0) + ENTRE * (anchos.length - 1);
   let lx = (VB_W - totalLeyenda) / 2;
@@ -267,7 +268,7 @@ function drawMorphologyPie(normal, cabeza, pieza, flagelo, inmaduros, otros){
   const svg = document.getElementById('morphology-pie');
   const values = [normal, cabeza, pieza, flagelo, inmaduros, otros];
   if(!values.every(isFinite)){
-    drawDonutChart(svg, 160, 100, 78, [], 'Completa la morfología para ver el grafico');
+    drawStackedBar(svg, [], 'Completa la morfología para ver el gráfico');
     return;
   }
   const slices = [
@@ -278,7 +279,7 @@ function drawMorphologyPie(normal, cabeza, pieza, flagelo, inmaduros, otros){
     { label: 'Inmaduros', value: Math.max(inmaduros, 0), color: '#16A085' },
     { label: 'Otros',     value: Math.max(otros,     0), color: '#7F8C8D' }
   ];
-  drawDonutChart(svg, 160, 100, 78, slices, 'Completa la morfología para ver el grafico', 3);
+  drawStackedBar(svg, slices, 'Completa la morfología para ver el gráfico', 16);
 }
 
 function stepCard(id, delta){
