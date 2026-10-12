@@ -454,7 +454,7 @@ function computeAll(){
   const xy = sum([h,i,j,k,l]);
   const anyAnorm = [h,i,j,k,l].some(v => isFinite(v));
   document.getElementById('m-anom-total').value = anyAnorm ? xy : '';
-
+  setOut('out-anomTotal', anyAnorm ? pct(xy, mVal) : NaN, 1, '%');
   // LEUCOCITOS: α × (µ/π) × 100
   const q = val('m-q');
   setOut('out-celulas-redondas', q, 2, 'x10⁶/ml');
