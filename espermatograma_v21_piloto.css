@@ -1683,6 +1683,17 @@
   .ppg-cell:nth-child(10), .ppg-cell:nth-child(11),
   .ppg-cell:nth-child(12){ grid-column: span 8 !important; }
 }
+/* Botón para cambiar de reporte */
+.title-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.switch-report{
+  display:inline-flex; align-items:center;
+  font-family:'Inter', sans-serif; font-size:13px; font-weight:600;
+  color:var(--accent); background:#fff;
+  border:1px solid var(--accent); border-radius:8px;
+  padding:6px 12px; text-decoration:none; white-space:nowrap;
+}
+.switch-report:hover{ background:var(--accent-soft); }
+@media print{ .switch-report{ display:none !important; } }
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
 #motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
 @media print {
