@@ -1558,6 +1558,20 @@
   .macros-bar-title{ margin: 8px 8px 0 !important; }
   .panel-head{ margin: 0 0 6px !important; }
 }
+
+/* Banda "ESPERMATOGRAMA" de borde a borde de la hoja */
+@media print {
+  @page { size: A4; margin: 10mm 0; }
+  .shell { padding: 0 10mm !important; }
+  header.top, .page-print-header{
+    margin-left: -10mm !important;
+    margin-right: -10mm !important;
+    width: calc(100% + 20mm) !important;
+    padding-left: calc(28px + 10mm) !important;
+    padding-right: calc(28px + 10mm) !important;
+    border-radius: 0 !important;
+  }
+}
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
 #motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
 @media print {
