@@ -1527,7 +1527,7 @@
   }
 
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
-#motility-chart-wrap svg{ width:100%; max-width:520px; height:auto; }
+#motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
 @media print {
-  #motility-chart-wrap svg{ width:100% !important; max-width:480px !important; height:auto !important; }
+    #motility-chart-wrap svg, #morphology-pie{ width:100% !important; max-width:480px !important; height:auto !important; }
 }
