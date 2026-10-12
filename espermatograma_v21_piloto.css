@@ -1620,8 +1620,7 @@
     letter-spacing: .02em !important;
   }
   .print-footer b{ font-weight: 700 !important; }
-  .page-number-print{ bottom: 9mm !important; }
-  .print-page-break{ padding-bottom: 9mm !important; }
+  @page { size: A4; margin: 10mm 0 0; }
 }
 /* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
 #motility-chart-wrap svg, #morphology-pie{ width:100%; max-width:520px; height:auto; }
