@@ -1,4 +1,4 @@
-  :root{
+:root{
     --bg:#F5F6F8;
     --panel:#FFFFFF;
     --ink:#16213D;
@@ -1525,3 +1525,9 @@
       color:#9AA1AE !important;
     }
   }
+
+/* v21 — Motilidad: barra horizontal apilada (más ancha que la dona) */
+#motility-chart-wrap svg{ width:100%; max-width:520px; height:auto; }
+@media print {
+  #motility-chart-wrap svg{ width:100% !important; max-width:480px !important; height:auto !important; }
+}
