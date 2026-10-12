@@ -807,8 +807,7 @@ CAMPOS_PACIENTE.forEach(id => {
 document.getElementById('p-abstinencia').addEventListener('input', validateInputs);
 syncPrintPatient();
 
-// P1-1 — versión visible en pantalla y en el informe impreso
-document.getElementById('app-version').textContent = 'Versión ' + APP_VERSION;
+
 
 // P0-4 — botón Demo solo con ?dev=1
 if(new URLSearchParams(location.search).get('dev') === '1'){
