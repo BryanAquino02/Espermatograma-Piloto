@@ -401,7 +401,7 @@ function computeAll(){
 
   const m = sum([g,h,i,j,k,l]);
   const anyMorf = [g,h,i,j,k,l].some(v => isFinite(v));
-  document.getElementById('m-m').value = anyMorf ? m : '';
+  document.getElementById('m-esp-normales').value = isFinite(g) ? g : '';
 
   const p = sum([n,o]);
   const anyVit = [n,o].some(v => isFinite(v));
