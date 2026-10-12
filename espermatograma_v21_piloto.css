@@ -1683,6 +1683,7 @@
   .ppg-cell:nth-child(10), .ppg-cell:nth-child(11),
   .ppg-cell:nth-child(12){ grid-column: span 8 !important; }
 }
+
 /* Botón para cambiar de reporte */
 .title-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
 .switch-report{
@@ -1699,3 +1700,9 @@
 @media print {
     #motility-chart-wrap svg, #morphology-pie{ width:100% !important; max-width:480px !important; height:auto !important; }
 }
+.session-box{ display:inline-flex; align-items:center; gap:10px; font-size:13px; color:var(--ink-soft); }
+.session-user{ font-weight:600; color:var(--ink); }
+.session-user:empty{ display:none; }
+.session-logout{ color:var(--ink-soft); text-decoration:underline; text-underline-offset:2px; }
+.session-logout:hover{ color:var(--accent); }
+@media print{ .session-box{ display:none !important; } }
