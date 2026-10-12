@@ -672,7 +672,7 @@
     /* ═══════════════════════════════════════════════
        CABECERA — banda azul oscuro
        ═══════════════════════════════════════════════ */
-    .print-logo{ display:block !important; height:44px !important; width:auto !important; filter: brightness(0) invert(1) !important; }
+    .print-logo{ display:block !important; height:44px !important; width:auto !important; }
 
     header.top {
       display: flex !important;
