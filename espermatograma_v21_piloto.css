@@ -1578,6 +1578,15 @@
   }
 }
 
+/* Hoja 1: secciones seguidas, sin repartir el espacio en blanco entre ellas */
+@media print {
+  .print-page1-group{
+    justify-content: flex-start !important;
+    gap: 6mm !important;
+    padding-top: 15mm !important;
+  }
+}
+
 /* Tabla "Valores de referencia OMS 2021": datos centrados */
 .vn-table td{ text-align: center !important; }
 .vn-table td:first-child{ width: 50% !important; }
