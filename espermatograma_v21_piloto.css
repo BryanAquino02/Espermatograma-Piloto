@@ -1542,11 +1542,10 @@
     bottom: 100% !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    margin-bottom: 6px !important;
+    margin-bottom: 26px !important;
     filter: none !important;
   }
 }
-
 /* Títulos "Datos macroscópicos" y "Datos microscópicos" como banda de color en el PDF */
 @media print {
   .macros-bar-title, .panel-head{
