@@ -182,19 +182,85 @@ function drawDonutChart(svg, cx, cy, outerR, slices, emptyText, legendCols){
   });
 }
 
+/* Barra horizontal apilada al 100 % (reemplaza a la dona de motilidad).
+   Segmentos redondeados separados por un pequeño hueco, % dentro de cada
+   segmento, eje 0–50–100 % debajo y leyenda centrada. */
+function drawStackedBar(svg, slices, emptyText){
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const VB_W = 520, VB_H = 130;
+  const X0 = 20, BAR_W = 480, BAR_Y = 8, BAR_H = 34;
+  const GAP = 4, RX = 5;
+  const AXIS_Y = 58, LEGEND_Y = 104;
+  svg.setAttribute('viewBox', '0 0 ' + VB_W + ' ' + VB_H);
+
+  function el(tag, attrs, text){
+    const e = document.createElementNS(SVG_NS, tag);
+    Object.keys(attrs).forEach(k => e.setAttribute(k, attrs[k]));
+    if(text !== undefined) e.textContent = text;
+    svg.appendChild(e);
+    return e;
+  }
+
+  const visibles = slices.filter(s => s.value > 0);
+  const total = visibles.reduce((acc, s) => acc + s.value, 0);
+  if(total <= 0){
+    el('text', { x: VB_W / 2, y: VB_H / 2, 'text-anchor': 'middle',
+                 'font-size': '12', fill: '#9AA1AE' }, emptyText);
+    return;
+  }
+
+  // Segmentos
+  const disponible = BAR_W - GAP * (visibles.length - 1);
+  let x = X0;
+  visibles.forEach(s => {
+    const w = (s.value / total) * disponible;
+    el('rect', { x: x, y: BAR_Y, width: Math.max(w, 1), height: BAR_H,
+                 rx: Math.min(RX, w / 2), fill: s.color });
+    if(w >= 34){
+      el('text', { x: x + w / 2, y: BAR_Y + BAR_H / 2 + 4.5, 'text-anchor': 'middle',
+                   'font-size': '13', 'font-weight': '700', fill: '#FFFFFF' },
+         s.value.toFixed(0) + '%');
+    }
+    x += w + GAP;
+  });
+
+  // Eje 0 % – 50 % – 100 %
+  el('line', { x1: X0, y1: AXIS_Y, x2: X0 + BAR_W, y2: AXIS_Y,
+               stroke: '#D5D9E0', 'stroke-width': '1' });
+  [[0, 'start'], [50, 'middle'], [100, 'end']].forEach(([p, anchor]) => {
+    const tx = X0 + (p / 100) * BAR_W;
+    el('line', { x1: tx, y1: AXIS_Y, x2: tx, y2: AXIS_Y + 4,
+                 stroke: '#D5D9E0', 'stroke-width': '1' });
+    el('text', { x: tx, y: AXIS_Y + 17, 'text-anchor': anchor,
+                 'font-size': '10.5', 'font-weight': '600', fill: '#9AA1AE' }, p + '%');
+  });
+
+  // Leyenda centrada (ancho estimado: el panel puede estar oculto y no se puede medir)
+  const SQ = 14, SEP = 8, ENTRE = 28, CHAR_W = 6.4;
+  const anchos = visibles.map(s => SQ + SEP + s.label.length * CHAR_W);
+  const totalLeyenda = anchos.reduce((a, b) => a + b, 0) + ENTRE * (anchos.length - 1);
+  let lx = (VB_W - totalLeyenda) / 2;
+  visibles.forEach((s, idx) => {
+    el('rect', { x: lx, y: LEGEND_Y - SQ / 2, width: SQ, height: SQ, rx: 3, fill: s.color });
+    el('text', { x: lx + SQ + SEP, y: LEGEND_Y + 4, 'font-size': '11.5', fill: '#16213D' }, s.label);
+    lx += anchos[idx] + ENTRE;
+  });
+}
+
 function drawMotilityPie(prog, noProg, inmov){
   const svg = document.getElementById('motility-pie');
   const values = [prog, noProg, inmov];
   if(!values.every(isFinite)){
-    drawDonutChart(svg, 160, 100, 78, [], 'Completa la motilidad para ver el grafico');
+    drawStackedBar(svg, [], 'Completa la motilidad para ver el gráfico');
     return;
   }
   const slices = [
-    { label: 'Progresiva',    value: Math.max(prog, 0),   color: '#1F4E96' },
-    { label: 'No Progresiva', value: Math.max(noProg, 0), color: '#2E7D32' },
-    { label: 'Inmótiles',     value: Math.max(inmov, 0),  color: '#C0392B' }
+    { label: 'Progresiva',    value: Math.max(prog, 0),   color: '#0E7C9B' },
+    { label: 'No progresiva', value: Math.max(noProg, 0), color: '#F5C400' },
+    { label: 'Inmótil',       value: Math.max(inmov, 0),  color: '#666666' }
   ];
-  drawDonutChart(svg, 160, 100, 78, slices, 'Completa la motilidad para ver el grafico', 3);
+  drawStackedBar(svg, slices, 'Completa la motilidad para ver el gráfico');
 }
 
 function drawMorphologyPie(normal, cabeza, pieza, flagelo, inmaduros, otros){
