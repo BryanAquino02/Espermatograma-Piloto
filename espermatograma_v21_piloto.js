@@ -461,9 +461,9 @@ function computeAll(){
   const leucResult = (isFinite(q) && isFinite(leuco) && leucoTotal > 0) ? q * (leuco / leucoTotal) : NaN;
   setOut('out-leucocitos', leucResult, 3, 'x10⁶/ml');
 
-  // ÍNDICE DE TERATOZOOSPERMIA: (cabeza + pieza media + flagelo + otras formas) / total anomalías
-  const hijl = (isFinite(h)?h:0) + (isFinite(i)?i:0) + (isFinite(j)?j:0) + (isFinite(l)?l:0);
-  setOut('out-tzi', (anyAnorm && xy > 0) ? hijl / xy : NaN, 2, '');
+  // ÍNDICE DE TERATOZOOSPERMIA: total de anomalías / espermatozoides anormales
+  const espAnormales = val('m-esp-anormales');
+  setOut('out-tzi', (anyAnorm && isFinite(espAnormales) && espAnormales > 0) ? xy / espAnormales : NaN, 2, '');
   
   // BAR CHART
   drawBarChart(b, motTotal, atVal, pct(n, pVal));
