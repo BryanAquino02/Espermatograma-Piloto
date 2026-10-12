@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capacitación Espermática</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F6F8;
+    --panel:#FFFFFF;
+    --ink:#16213D;
+    --ink-soft:#5C6577;
+    --line:#E1E4EA;
+    --accent:#0E7C7B;
+    --accent-soft:#E3F1F0;
+    --highlight-bg:#FBF1DF;
+    --highlight-ink:#8A5A0E;
+    --card-bg:#E3F1F0;
+    --card-border:#BFDEDC;
+    --card-ink:#0E7C7B;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'Source Code Pro', monospace; }
+  .shell{ max-width:1080px; margin:0 auto; padding:28px 20px 60px; }
+
+  .screen-hidden{ display:none; }
+  .hide-on-screen{ display:none; }
+
+  /* Botón para cambiar de reporte */
+  .title-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .switch-report{
+    display:inline-flex; align-items:center;
+    font-family:'Inter', sans-serif; font-size:13px; font-weight:600;
+    color:var(--accent); background:#fff;
+    border:1px solid var(--accent); border-radius:8px;
+    padding:6px 12px; text-decoration:none; white-space:nowrap;
+  }
+  .switch-report:hover{ background:var(--accent-soft); }
+  @media print{ .switch-report{ display:none !important; } }
+
+  /* HEADER */
+  header.top{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:12px;
+    margin-bottom:14px;
+  }
+  header.top .title-block h1{
+  font-size:24px;
+  font-weight:700;
+  margin:0;
+  letter-spacing:-0.02em;
+}
+  .patient-fields{ display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start; width:100%; }
+  .macro-input-group{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-shrink:0;
+    width:100%;
+  }
+  .macro-stepper{
+    display:flex;
+    align-items:center;
+    background:rgba(0,0,0,0.06);
+    border-radius:7px;
+    height:28px;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .macro-stepper-btn{
+    width:26px;
+    height:28px;
+    border:none;
+    background:transparent;
+    font-size:16px;
+    line-height:1;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    padding:0;
+    font-family:'Inter', sans-serif;
+  }
+  .macro-stepper-btn:hover{ background:rgba(0,0,0,0.06); }
+  .macro-stepper-btn:active{ background:rgba(0,0,0,0.1); }
+  .macro-stepper-divider{
+    width:1px;
+    height:16px;
+    background:rgba(0,0,0,0.12);
+    flex-shrink:0;
+  }
+  .patient-names{ display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; }
+  .field-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .field.grow{ min-width:140px; flex:1; }
+  .field.small{ width:72px; flex-shrink:0; }
+  .field.small input{ min-width:0; width:100%; }
+  .patient-fields .field{ display:flex; flex-direction:column; gap:4px; flex:1; min-width:0; }
+  .patient-fields label{ font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }
+  .patient-fields input,
+  .patient-fields select{
+    font-family:'Inter', sans-serif;
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:7px 10px;
+    font-size:13px;
+    width:100%;
+    box-sizing:border-box;
+  }
+  .patient-fields .macro-input-group input{ width:auto; flex:1; min-width:0; }
+
+  .disclaimer{
+    background:var(--accent-soft);
+    border:1px solid #C9E4E2;
+    color:#0B5453;
+    font-size:12.5px;
+    line-height:1.5;
+    padding:10px 14px;
+    border-radius:8px;
+    margin-bottom:22px;
+  }
+
+  /* MAIN LAYOUT */
+  .panels{ display:grid; grid-template-columns:1fr; gap:22px; align-items:start; }
+  @media (max-width:840px){ .panels{ grid-template-columns:1fr; } }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px 20px;
+  }
+  .panel-head{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.05em;
+    color:var(--accent);
+    text-transform:uppercase;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:6px;
+  }
+
+  /* PAGINATION */
+  .page-indicator{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--line);
+  }
+  .page-title{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    letter-spacing:.03em;
+    text-transform:uppercase;
+  }
+  .page-dots{
+    display:flex;
+    gap:5px;
+    align-items:center;
+  }
+  .page-dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--line);
+    transition:background .2s;
+  }
+  .page-dot.active{ background:var(--accent); }
+
+  /* PAGE CONTENT */
+  .page-content{ display:none; }
+  .page-content.active{ display:block; }
+
+  /* CARDS GRID (like the physical format) */
+  .cards-grid{
+    display:grid;
+    gap:12px;
+    margin-top:10px;
+  }
+  .cards-grid.col-1{ grid-template-columns:1fr; }
+  .cards-grid.col-2{ grid-template-columns:1fr 1fr; }
+  .cards-grid.col-3{ grid-template-columns:1fr 1fr 1fr; }
+
+  .card{
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:10px;
+    padding:14px 14px 12px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .card.auto-card{
+    background:#EEF2FF;
+    border-color:#B0C0E8;
+  }
+  .card-label{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--card-ink);
+    line-height:1.3;
+  }
+  .card.auto-card .card-label{ color:#1F4E96; }
+  .card-input-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .card-value-box{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    background:#fff;
+    border-radius:8px;
+    padding:8px 12px;
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .card-input{
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    font-weight:600;
+    border:none;
+    border-radius:0;
+    padding:0;
+    background:transparent;
+    width:100%;
+    text-align:left;
+    color:var(--ink);
+  }
+  .card-input:focus{ outline:none; }
+  .card-input::-webkit-outer-spin-button,
+  .card-input::-webkit-inner-spin-button{
+    -webkit-appearance:none;
+    margin:0;
+  }
+  .card-input[type="number"]{ -moz-appearance:textfield; }
+  .card-value-box:focus-within{ outline:2px solid var(--accent); outline-offset:1px; }
+  .card-input.auto-input{
+    background:#E8EEFF;
+    border:1px solid #B0C0E8;
+    border-radius:6px;
+    padding:7px 10px;
+    color:#1F4E96;
+    font-weight:600;
+    cursor:default;
+    width:100%;
+  }
+  select.card-input{ text-align:left; appearance:auto; cursor:pointer; width:100%; }
+  .card-unit{
+    font-size:12px;
+    color:var(--card-ink);
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .card-stepper{
+    display:flex;
+    align-items:center;
+    background:rgba(0,0,0,0.06);
+    border-radius:8px;
+    height:32px;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .stepper-btn{
+    width:32px;
+    height:32px;
+    border:none;
+    background:transparent;
+    font-size:19px;
+    line-height:1;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    padding:0;
+    font-family:'Inter', sans-serif;
+  }
+  .stepper-btn:hover{ background:rgba(0,0,0,0.06); }
+  .stepper-btn:active{ background:rgba(0,0,0,0.1); }
+  .stepper-divider{
+    width:1px;
+    height:20px;
+    background:rgba(0,0,0,0.12);
+    flex-shrink:0;
+  }
+  .card-formula{
+    font-family:'Inter', sans-serif;
+    font-size:10px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .card-var{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px; height:18px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-family:'Inter', sans-serif;
+    font-size:11px;
+    font-weight:700;
+    flex-shrink:0;
+    margin-right:4px;
+  }
+  .card.auto-card .card-var{
+    background:#D8E2FF;
+    color:#1F4E96;
+  }
+
+  /* WARN */
+  .sum-warning{
+    font-size:11px; color:#B23A3A; margin:4px 0 0;
+    grid-column: 1 / -1;
+  }
+
+  /* OLD STYLE (macroscópicos) */
+  .section-head{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.05em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    margin:16px 0 2px;
+  }
+  .section-head:first-of-type{ margin-top:10px; }
+  .row{ display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #F0F1F4; }
+  .row:last-child{ border-bottom:none; }
+  .badge-dot{
+    width:22px; height:22px; display:flex; align-items:center; justify-content:center;
+    color:var(--ink-soft); font-size:15px; flex-shrink:0;
+  }
+  .row-text{ flex:1; min-width:0; }
+  .row-label{ font-size:13.5px; color:var(--ink); }
+  .row-label .unit{ color:var(--ink-soft); font-weight:400; }
+  .input-box{
+    width:104px; font-family:'Source Code Pro', monospace; font-size:13px;
+    border:1px solid var(--line); border-radius:7px; padding:7px 9px;
+    background:#FBFBFC; text-align:right; flex-shrink:0;
+  }
+  .input-box:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  select.input-box{ text-align:left; appearance:auto; cursor:pointer; }
+
+  /* NAV BUTTONS */
+  .page-nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+    gap:10px;
+  }
+  .nav-btn{
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    border-radius:8px;
+    padding:8px 18px;
+    cursor:pointer;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    transition:background .15s;
+  }
+  .nav-btn:hover{ background:#F4F5F7; }
+  .nav-btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .nav-btn.next{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .nav-btn.next:hover{ background:#0C6968; }
+
+  /* RIGHT PANEL (datos procesados — unchanged) */
+  .badge-letter{
+    min-width:22px; height:22px; border-radius:11px;
+    padding:0 4px;
+    background:var(--accent-soft); color:var(--accent);
+    font-family:'Source Code Pro', monospace; font-size:11px; font-weight:600;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .out-value{
+    font-family:'Source Code Pro', monospace; font-size:13.5px; font-weight:600;
+    min-width:90px; text-align:right; flex-shrink:0;
+  }
+  .row.highlight{
+    background:var(--highlight-bg);
+    border-radius:8px;
+    padding:9px 10px;
+    margin:2px -10px;
+    border-bottom:none;
+  }
+  .row.highlight .row-label{ color:var(--highlight-ink); font-weight:600; }
+  .row.highlight .out-value{ color:var(--highlight-ink); }
+  .row-formula{ font-family:'Inter', sans-serif; font-size:11px; color:var(--ink-soft); margin-top:2px; }
+
+  .chart-wrap{
+    display:flex; justify-content:center; padding:8px 0 6px;
+  }
+  .chart-wrap svg{ width:100%; max-width:320px; height:auto; }
+  .chart-empty-text{ font-family:'Inter', sans-serif; }
+
+  /* ACTIONS */
+  .actions{ display:flex; gap:10px; margin-top:22px; }
+  button.primary{ background:var(--accent); color:#fff; font-family:'Inter', sans-serif; font-size:13px; font-weight:600; border-radius:8px; padding:9px 16px; cursor:pointer; border:1px solid transparent; }
+  button.primary:hover{ background:#0C6968; }
+  button.ghost{ background:#fff; border:1px solid var(--line); color:var(--ink); font-family:'Inter', sans-serif; font-size:13px; font-weight:600; border-radius:8px; padding:9px 16px; cursor:pointer; }
+  button.ghost:hover{ background:#F4F5F7; }
+
+  footer{ margin-top:22px; font-size:11.5px; color:var(--ink-soft); text-align:center; }
+
+  /* BARRA MACROSCÓPICOS */
+  .macros-bar{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 20px 16px;
+    margin-bottom:22px;
+  }
+  .macros-bar-title{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.05em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin-bottom:12px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .macros-bar-fields{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:0;
+  }
+  .macro-field{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    padding:7px 10px 7px 0;
+    border-bottom:none;
+    gap:8px;
+  }
+  .macro-field:nth-child(n+7){ border-bottom:none; }
+  .macro-field label{
+    font-size:12px;
+    color:var(--ink-soft);
+    flex:1;
+    min-width:0;
+  }
+  .macro-field .input-box{
+    width:auto;
+    min-width:90px;
+    text-align:right;
+    font-weight:600;
+    font-size:13px;
+  }
+
+  /* SECCIONES FINALES */
+  .print-only{ display:none; }
+  .report-footer-sections{
+    display:flex;
+    gap:22px;
+    margin-top:22px;
+  }
+  .report-section{
+    flex:1;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 20px 20px;
+  }
+  .report-section-title{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:12px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .report-section-body{
+    min-height:64px;
+    border-bottom:1px solid #E1E4EA;
+  }
+
+
+  @media print{
+    /* ── FUENTE Y BASE ── */
+    * { font-family: Arial, Helvetica, sans-serif !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important; }
+    body{ background:#fff !important; font-size:12px; color:#000; margin:0; }
+    .shell{ padding:0 !important; max-width:100% !important; }
+
+    /* ── OCULTAR UI DE PANTALLA ── */
+    .no-print{ display:none !important; }
+    .disclaimer{ display:none !important; }
+    .page-nav{ display:none !important; }
+    .page-indicator{ display:none !important; }
+    /* page-content elements viven dentro del panel:first-child que es display:none;
+       NO se activan en impresión — el panel completo queda excluido del flujo */
+    .page-content{ display:none !important; }
+    .print-only{ display:flex !important; }
+    .no-screen{ display:flex !important; }
+    .print-logo{ display:block !important; height:44px !important; width:auto !important; filter: brightness(0) invert(1) !important; }
+    .screen-hidden{ display:block !important; }
+
+    /* ── CABECERA: BANDA AZUL ── */
+    header.top{
+      display:flex !important;
+      justify-content:space-between !important;
+      align-items:center !important;
+      background:#0d6e8a !important;
+      color:#fff !important;
+      padding:18px 28px 17px !important;
+      margin:0 !important;
+      border:none !important;
+    }
+    header.top .title-block h1{
+      font-size:17px !important;
+      font-weight:700 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.1em !important;
+      color:#fff !important;
+      margin:0 0 2px !important;
+    }
+    header.top .title-block{
+      display:block !important;
+    }
+    header.top .title-block p{
+      font-size:9.5px !important;
+      color:#8ab0cc !important;
+      letter-spacing:.06em !important;
+      text-transform:uppercase !important;
+      margin:0 !important;
+      display:block !important;
+    }
+    /* N° de informe en la derecha del header */
+    .print-informe-block{
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:flex-end !important;
+    }
+    .print-informe-lbl{
+      font-size:9px !important;
+      color:#8ab0cc !important;
+      letter-spacing:.06em !important;
+      text-transform:uppercase !important;
+    }
+    .print-informe-num{
+      font-size:18px !important;
+      font-weight:700 !important;
+      color:#fff !important;
+      letter-spacing:.04em !important;
+    }
+
+    /* Badge ISO 9001 dentro del recuadro celeste */
+    .print-header-right{
+      display:flex !important;
+      align-items:center !important;
+      gap:16px !important;
+    }
+    .print-iso-badge{
+      height:40px !important;
+      width:auto !important;
+      background:#fff !important;
+      border-radius:6px !important;
+      padding:3px 7px !important;
+      display:block !important;
+    }
+
+    /* Mini cabecera (logo + código de muestra) repetida en hoja 2 */
+    .page-print-header{
+      display:flex !important;
+      justify-content:space-between !important;
+      align-items:center !important;
+      background:#0d6e8a !important;
+      color:#fff !important;
+      padding:12px 28px !important;
+      margin:0 0 20px !important;
+    }
+    .page-print-header .title-block{
+      display:flex !important;
+      align-items:center !important;
+      gap:16px !important;
+    }
+    .page-print-header .title-block h1{
+      font-size:13px !important;
+      font-weight:700 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.1em !important;
+      color:#fff !important;
+      margin:0 !important;
+    }
+    .page-print-header .print-logo{
+      height:28px !important;
+    }
+    .page-print-header .print-informe-num{
+      font-size:14px !important;
+    }
+    .page-print-header .print-iso-badge{
+      height:26px !important;
+    }
+
+    /* ── BANDA DE PACIENTE: ocultar form, mostrar tabla limpia ── */
+    .patient-fields{ display:none !important; }
+    .print-patient-table{
+      display:grid !important;
+      grid-template-columns:repeat(12,1fr) !important;
+      border-bottom:2px solid #d0d8e4 !important;
+      background:#fff !important;
+      margin-top:16px !important;
+    }
+    /* Fila 1: paciente(4) técnica(2) cónyuge(3) institución(3) */
+    .print-patient-table .print-patient-cell:nth-child(1){ grid-column:span 4 !important; }
+    .print-patient-table .ppc-meta:nth-child(2){ grid-column:span 2 !important; }
+    .print-patient-table .print-patient-cell:nth-child(3){ grid-column:span 3 !important; }
+    .print-patient-table .print-patient-cell:nth-child(4){ grid-column:span 3 !important; border-right:none !important; }
+    /* Fila 2: médico(3) fecha(2) abstinencia(2) operador(2) tipo-muestra(3) */
+    .ppc-meta{
+      border-top:1px solid #dde3ec !important;
+      background:#f4f6f9 !important;
+    }
+    .print-patient-table .ppc-meta:nth-child(5){ grid-column:span 3 !important; }
+    .print-patient-table .ppc-meta:nth-child(6){ grid-column:span 2 !important; }
+    .print-patient-table .ppc-meta:nth-child(7){ grid-column:span 2 !important; }
+    .print-patient-table .ppc-meta:nth-child(8){ grid-column:span 2 !important; }
+    .print-patient-table .ppc-meta:nth-child(9){ grid-column:span 3 !important; border-right:none !important; }
+    /* Fila 3: horarios (4 · 4 · 4) */
+    .ppc-hora{
+      border-top:1px solid #dde3ec !important;
+      background:#edf1f7 !important;
+    }
+    .print-patient-table .ppc-hora:nth-child(10){ grid-column:span 4 !important; }
+    .print-patient-table .ppc-hora:nth-child(11){ grid-column:span 4 !important; }
+    .print-patient-table .ppc-hora:nth-child(12){ grid-column:span 4 !important; border-right:none !important; }
+    .print-patient-cell{
+      padding:10px 14px 10px 20px !important;
+      border-right:1px solid #e4e9f0 !important;
+      display:flex !important;
+      flex-direction:column !important;
+      justify-content:center !important;
+      gap:2px !important;
+    }
+    .ppc-meta.print-patient-cell,
+    .ppc-hora.print-patient-cell{
+      padding:7px 14px 7px 20px !important;
+    }
+    .print-patient-cell .pc-lbl{
+      font-size:9px !important;
+      font-weight:700 !important;
+      text-transform:uppercase !important;
+      color:#8a9ab5 !important;
+      letter-spacing:.08em !important;
+      display:block !important;
+      margin-bottom:2px !important;
+    }
+    .print-patient-cell .pc-val{
+      font-size:14px !important;
+      font-weight:700 !important;
+      color:#0d1b2e !important;
+      display:block !important;
+      line-height:1.3 !important;
+    }
+    .print-patient-cell .pc-val-sm{
+      font-size:12.5px !important;
+      font-weight:600 !important;
+      color:#1a2d45 !important;
+      display:block !important;
+      line-height:1.4 !important;
+    }
+
+    /* ── MACROSCÓPICOS ── */
+    .macros-bar{
+      margin:14px 24px 0 !important;
+      border:none !important;
+      border-radius:0 !important;
+      padding:0 !important;
+      background:none !important;
+    }
+    .macros-bar-title{
+      display:flex !important;
+      align-items:center !important;
+      gap:8px !important;
+      font-size:11px !important;
+      font-weight:700 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.08em !important;
+      color:#0d6e8a !important;
+      border-bottom:1px solid #c8d4e0 !important;
+      padding-bottom:5px !important;
+      margin-bottom:0 !important;
+    }
+    .macros-bar-title::before{
+      content:"I" !important;
+      background:#0d6e8a !important;
+      color:#fff !important;
+      font-size:9.5px !important;
+      font-weight:700 !important;
+      width:15px !important; height:15px !important;
+      border-radius:50% !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      flex-shrink:0 !important;
+    }
+    .macros-bar-fields{
+      display:grid !important;
+      grid-template-columns:repeat(2,1fr) !important;
+      gap:0 !important;
+      border:none !important;
+      background:none !important;
+    }
+    .macro-field{
+      display:flex !important;
+      align-items:center !important;
+      flex-direction:row !important;
+      padding:5px 12px 5px 0 !important;
+      border-right:none !important;
+      border-bottom:0.5px solid #e8eaee !important;
+      min-width:0 !important;
+      gap:0 !important;
+    }
+    .macro-field:nth-child(3n){ padding-right:0 !important; }
+    .macro-field:nth-last-child(-n+3){ border-bottom:none !important; }
+    .macro-field label{
+      font-size:11.5px !important;
+      color:#555 !important;
+      text-transform:none !important;
+      font-weight:400 !important;
+      flex:1 !important;
+      letter-spacing:0 !important;
+    }
+    .macro-field .input-box{
+      border:none !important;
+      background:none !important;
+      font-size:12.5px !important;
+      font-weight:700 !important;
+      color:#111 !important;
+      padding:0 !important;
+      width:auto !important;
+      min-width:70px !important;
+      text-align:right !important;
+      font-family:Arial, Helvetica, sans-serif !important;
+    }
+
+    /* break-after eliminado: .macros-bar no tiene elemento HTML correspondiente */
+    /* ── LAYOUT UNA COLUMNA, CADA PANEL EN SU PROPIA PÁGINA ── */
+    .panels{
+      display:block !important;
+      padding:0 !important;
+      margin-top:18px !important;
+    }
+    .panel{
+      border:none !important;
+      border-radius:0 !important;
+      padding:14px 24px !important;
+    }
+    .panels .panel:last-child{
+      margin-top:18px !important;
+      padding-top:20px !important;
+      border-top:2px solid #d8dee8 !important;
+    }
+    /* Suprimir panel izquierdo y TODO su subárbol sin excepción.
+       Chromium puede reservar altura para hijos display:block dentro de
+       un padre display:none — el wildcard lo previene explícitamente. */
+    .panels .panel:first-child,
+    .panels .panel:first-child *{
+      display:none !important;
+    }
+    /* grid-template-columns irrelevante: .panels ya es display:block */
+    .hide-on-screen{ display:block !important; }
+    .row-formula{ display:none !important; }
+    .panel-head{
+      font-size:10px !important;
+      font-weight:700 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.05em !important;
+      color:#555 !important;
+      padding-bottom:6px !important;
+      border-bottom:1px solid #ccc !important;
+      margin-bottom:6px !important;
+    }
+
+    /* Separadores entre secciones: eliminados — los page-content están
+       dentro del panel:first-child suprimido y no participan en el flujo. */
+
+    /* ── CARDS → FILAS LIMPIAS ── */
+    .cards-grid{ display:block !important; }
+    .card{
+      background:none !important;
+      border:none !important;
+      border-bottom:1px solid #F0F0F0 !important;
+      border-radius:0 !important;
+      padding:4px 0 !important;
+      flex-direction:row !important;
+      align-items:center !important;
+      gap:8px !important;
+      display:flex !important;
+    }
+    .card:last-child{ border-bottom:none !important; }
+    .card.auto-card{ background:none !important; border-bottom:1px solid #F0F0F0 !important; }
+    .card-label{
+      flex:1 !important;
+      font-size:12px !important;
+      font-weight:400 !important;
+      color:#000 !important;
+      text-transform:none !important;
+      letter-spacing:0 !important;
+    }
+    .card-input-row{ flex-shrink:0 !important; }
+    .card-input{
+      width:80px !important;
+      font-size:13px !important;
+      border:none !important;
+      background:none !important;
+      text-align:right !important;
+      font-weight:700 !important;
+      color:#000 !important;
+      padding:0 !important;
+      font-family:Arial, Helvetica, sans-serif !important;
+    }
+    .card-input.auto-input{ color:#1A3A7A !important; }
+    .card-unit{ font-size:11px !important; color:#555 !important; }
+    .card-formula{ display:none !important; }
+    .sum-warning{ display:none !important; }
+
+    /* ── PANEL DERECHO: RESULTADOS ── */
+    .section-head{
+      font-size:9px !important;
+      font-weight:700 !important;
+      color:#2a8fa3 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.08em !important;
+      margin:14px 0 2px !important;
+      padding-top:10px !important;
+      border-top:1.5px solid #2a8fa3 !important;
+    }
+    .section-head:first-of-type{
+      margin-top:4px !important;
+      padding-top:0 !important;
+      border-top:none !important;
+    }
+    .row{
+      padding:5px 0 !important;
+      border-bottom:1px solid #F0F0F0 !important;
+      align-items:center !important;
+    }
+    .row-label{
+      font-size:12.5px !important;
+      color:#666 !important;
+      font-weight:400 !important;
+    }
+    .row-label .unit{ font-size:11px !important; color:#999 !important; }
+    .row-formula{ font-size:10px !important; color:#888 !important; }
+    .out-value{
+      font-size:14.5px !important;
+      font-weight:700 !important;
+      color:#111 !important;
+      white-space:nowrap !important;
+    }
+    .row.highlight{
+      background:none !important;
+      border-left:2.5px solid #2a8fa3 !important;
+      padding-left:6px !important;
+      margin:0 !important;
+    }
+    .row.highlight .row-label{
+      font-size:12.5px !important;
+      color:#222 !important;
+      font-weight:600 !important;
+    }
+    .row.highlight .out-value{
+      font-size:15px !important;
+      color:#2a8fa3 !important;
+    }
+    .badge-letter{
+      width:18px !important; height:18px !important;
+      font-size:11px !important;
+      background:#E8E8E8 !important;
+      color:#333 !important;
+    }
+
+    /* SVG ── contenido controlado por viewBox; altura auto evita espacio forzado */
+    #motility-pie{ width:280px !important; height:auto !important; }
+    .chart-wrap svg{ width:280px !important; height:auto !important; }
+
+    /* ── SECCIONES FINALES ── */
+    .report-footer-sections{
+      display:flex !important;
+      margin:12px 24px 0 !important;
+      gap:0 !important;
+      border:1px solid #ccc !important;
+    }
+    .report-section{
+      flex:1 !important;
+      border:none !important;
+      border-right:1px solid #ccc !important;
+      border-radius:0 !important;
+      padding:10px 14px !important;
+      background:#fff !important;
+    }
+    .report-section:last-child{ border-right:none !important; }
+    .report-section-title{
+      font-size:12px !important;
+      font-weight:700 !important;
+      color:#000 !important;
+      margin-bottom:8px !important;
+      padding-bottom:4px !important;
+      border-bottom:1px solid #ccc !important;
+    }
+    .report-section-body{
+      min-height:50px !important;
+      border-bottom:1px solid #ccc !important;
+    }
+
+    /* ── OBSERVACIONES EN PDF ── */
+    .obs-section{
+      margin:24px 24px 0 !important;
+      border:1px solid #ccc !important;
+      border-radius:0 !important;
+      padding:8px 14px 10px !important;
+      background:#fff !important;
+    }
+    .obs-title{
+      font-size:11px !important;
+      font-weight:700 !important;
+      color:#0d6e8a !important;
+      text-transform:uppercase !important;
+      letter-spacing:.06em !important;
+      border-bottom:1px solid #ddd !important;
+      padding-bottom:4px !important;
+      margin-bottom:6px !important;
+    }
+    .obs-textarea{ display:none !important; }
+    .obs-print{ display:block !important; font-size:12.5px !important; color:#222 !important; min-height:40px !important; white-space:pre-wrap !important; }
+
+    .firma-section{
+      margin:auto 24px 34px !important;
+      padding-bottom:0 !important;
+    }
+    .firma-espacio-firma{ height:72px !important; }
+    .firma-input{ display:none !important; }
+    .firma-nombre.print-only,
+    .firma-dato.print-only{ display:block !important; }
+  }
+
+
+  /* FIRMA */
+  .firma-section{
+    margin-top:32px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    padding-bottom:40px;
+  }
+  .firma-espacio-firma{ height:64px; }
+  .firma-linea{
+    width:220px;
+    border-top:1px solid var(--ink);
+    margin-bottom:8px;
+  }
+  .firma-nombre{
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .firma-dato{
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .firma-input{
+    font-family:'Inter', sans-serif;
+    border:none;
+    border-bottom:1px dashed var(--line);
+    background:transparent;
+    text-align:center;
+    padding:3px 8px;
+    width:260px;
+    color:var(--ink);
+    outline:none;
+  }
+  .firma-input:focus{ border-bottom-color:var(--accent); }
+  .firma-nombre-input{ font-size:13px; font-weight:600; }
+  .firma-dato-input{ font-size:12px; color:var(--ink-soft); }
+
+  /* OBSERVACIONES */
+  .obs-section{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 20px 16px;
+    margin-top:22px;
+  }
+  .obs-title{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.05em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin-bottom:10px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .obs-textarea{
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    color:var(--ink);
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:9px 12px;
+    resize:vertical;
+    box-sizing:border-box;
+    background:#FBFBFC;
+    line-height:1.6;
+  }
+  .obs-textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  .obs-print{
+    font-size:12px;
+    color:#222;
+    line-height:1.7;
+    min-height:36px;
+    white-space:pre-wrap;
+  }
+
+  /* GRÁFICO COMPARATIVO */
+  .motility-compare-wrap{
+    width:100%; padding: 10px 32px 4px; box-sizing:border-box;
+  }
+  .motility-compare-title{
+    font-size:11px; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; color:#555; margin-bottom:6px;
+  }
+  #motility-stacked-chart{ width:100%; height:auto; }
+  .motility-legend{
+    display:flex; gap:16px; justify-content:center;
+    margin-top:4px;
+  }
+  .leg-item{ font-size:10px; color:#555; display:flex; align-items:center; gap:4px; }
+  .leg-dot{ width:8px; height:8px; border-radius:2px; display:inline-block; }
+  .rem-post-card{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    max-width:320px; margin:8px auto 18px; padding:16px 20px;
+    background:#EAF6F5; border:2px solid var(--accent); border-radius:8px;
+    white-space:nowrap;
+  }
+  .rem-post-label{
+    font-size:11px; font-weight:700; letter-spacing:.03em;
+    text-transform:uppercase; color:var(--accent); white-space:nowrap;
+  }
+  .rem-post-value{
+    font-family:'Source Code Pro', monospace; font-size:17px; font-weight:800; color:var(--accent); white-space:nowrap;
+  }
+  @media print{
+    .rem-post-card{
+      max-width:none !important; width:max-content !important; margin:4px auto 24px !important; padding:14px 20px !important;
+      border:1.8px solid var(--accent) !important; border-radius:6px !important; background:#EAF6F5 !important;
+      gap:8px !important; white-space:nowrap !important;
+    }
+    .rem-post-label{ font-size:10px !important; white-space:nowrap !important; }
+    .rem-post-value{ font-size:15px !important; white-space:nowrap !important; }
+  }
+  @media print{
+    .motility-compare-wrap{
+      page-break-inside: avoid;
+      padding: 6px 32px 14px !important;
+    }
+    .motility-compare-title{
+      margin-top:6px !important;
+    }
+  }
+
+  /* ── HOJA IMPRESA: ANCLADA ARRIBA, CON MARGEN DE RESGUARDO PARA EL DOBLEZ ── */
+  @media print{
+    .print-sheet{
+      display:block !important;
+      padding-top: 34px !important;
+      min-height: auto !important;
+    }
+    .print-sheet-2{
+      page-break-before: always !important;
+      break-before: page !important;
+      display:flex !important;
+      flex-direction:column !important;
+      min-height: 100vh !important;
+    }
+  }
+
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="print-sheet print-sheet-1">
+
+  <header class="top">
+    <div class="title-block" style="display:flex; align-items:center; gap:24px;">
+      <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/logo-pranor-png.webp" alt="Pranor" class="print-logo" style="height:38px; width:auto; display:none;">
+      <div>
+        <div class="title-row">
+          <h1 id="print-title">Capacitación Espermática</h1>
+          <a href="./" class="switch-report no-print">← Espermatograma</a>
+        </div>
+        <p id="print-timestamp" style="font-size:9.5px; color:#8ab0cc; letter-spacing:.06em; text-transform:uppercase; margin:0;"></p>
+      </div>
+    </div>
+    <div class="print-header-right no-screen" style="display:none">
+      <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/Captura-de-pantalla-2024-12-23-a-las-15.13.42%20(1).png" alt="ISO 9001" class="print-iso-badge">
+      <div class="print-informe-block">
+        <span class="print-informe-lbl">Código de muestra</span>
+        <span class="print-informe-num js-informe-num" id="print-informe-num-display"></span>
+      </div>
+    </div>
+    <div class="patient-fields">
+      <div class="patient-names">
+        <div class="field-row">
+          <div class="field grow">
+            <label for="p-nombre">Paciente</label>
+            <input id="p-nombre" type="text" placeholder="Nombre completo">
+          </div>
+          <div class="field grow">
+            <label for="p-referencia">Técnica</label>
+            <select id="p-referencia" style="font-family:'Inter',sans-serif;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px;width:100%;box-sizing:border-box;">
+              <option value="">—</option>
+              <option value="Swim-up">Swim-up</option>
+              <option value="Gradiente de densidad">Gradiente de densidad</option>
+              <option value="Microfluidos">Microfluidos</option>
+            </select>
+          </div>
+          <div class="field grow">
+            <label for="p-viscosidad">Viscosidad</label>
+            <select id="p-viscosidad" style="font-family:'Inter',sans-serif;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px;width:100%;box-sizing:border-box;">
+              <option value="">—</option>
+              <option value="Normal">Normal</option>
+              <option value="Aumentada">Aumentada</option>
+              <option value="Muy aumentada">Muy aumentada</option>
+            </select>
+          </div>
+          <div class="field grow">
+            <label for="p-tipo-muestra">Tipo de muestra</label>
+            <select id="p-tipo-muestra" style="font-family:'Inter',sans-serif;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px;width:100%;box-sizing:border-box;">
+              <option value="">—</option>
+              <option value="Semen fresco">Semen fresco</option>
+              <option value="Semen congelado">Semen congelado</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field grow">
+            <label for="p-fecha-nac">Fecha de nacimiento</label>
+            <input id="p-fecha-nac" type="date" oninput="calcEdad()">
+          </div>
+          <div class="field small">
+            <label for="p-edad">Edad</label>
+            <input id="p-edad" type="text" placeholder="—" readonly style="background:#F5F6F8; color:var(--ink-soft); cursor:default;">
+          </div>
+          <div class="field small" style="width:150px;">
+            <label for="p-abstinencia">Abstinencia eyaculatoria</label>
+            <div class="macro-input-group">
+              <input id="p-abstinencia" type="number" min="0" placeholder="días">
+              <div class="macro-stepper">
+                <button type="button" class="macro-stepper-btn" aria-label="Restar" onclick="stepCard('p-abstinencia', -1)">–</button>
+                <div class="macro-stepper-divider"></div>
+                <button type="button" class="macro-stepper-btn" aria-label="Sumar" onclick="stepCard('p-abstinencia', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field grow">
+            <label for="p-conyuge">Cónyuge</label>
+            <input id="p-conyuge" type="text" placeholder="Nombre completo">
+          </div>
+          <div class="field grow">
+            <label for="p-medico">Médico</label>
+            <input id="p-medico" type="text" placeholder="Nombre del doctor">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field grow">
+            <label for="p-institucion">Institución</label>
+            <select class="input-box" id="p-institucion">
+              <option value="">—</option>
+              <optgroup label="Lima">
+                <option value="Concebir - San Isidro">Concebir - San Isidro</option>
+                <option value="Concebir - Los Olivos">Concebir - Los Olivos</option>
+                <option value="Concebir - San Miguel">Concebir - San Miguel</option>
+                <option value="Concebir - Santa Anita">Concebir - Santa Anita</option>
+                <option value="Concebir - Breña">Concebir - Breña</option>
+                <option value="Concebir - San Juan de Miraflores">Concebir - San Juan de Miraflores</option>
+                <option value="Concebir - San Juan de Lurigancho">Concebir - San Juan de Lurigancho</option>
+              </optgroup>
+              <optgroup label="Provincias">
+                <option value="Concebir - Arequipa">Concebir - Arequipa</option>
+                <option value="Concebir - Trujillo">Concebir - Trujillo</option>
+                <option value="Concebir - Chiclayo">Concebir - Chiclayo</option>
+                <option value="Concebir - Ica">Concebir - Ica</option>
+                <option value="Concebir - Cajamarca">Concebir - Cajamarca</option>
+                <option value="Concebir - Huánuco">Concebir - Huánuco</option>
+                <option value="Concebir - Tacna">Concebir - Tacna</option>
+                <option value="Concebir - Huancayo">Concebir - Huancayo</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="field grow">
+            <label for="p-informe">Código de muestra</label>
+            <input id="p-informe" type="text" placeholder="ej. 0143">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field grow">
+            <label for="p-operador">Código del operador</label>
+            <input id="p-operador" type="text" placeholder="—">
+          </div>
+          <div class="field grow">
+            <label for="p-fecha">Fecha</label>
+            <input id="p-fecha" type="date">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field grow">
+            <label for="p-hora-emision">Hora de emisión</label>
+            <input id="p-hora-emision" type="time">
+          </div>
+          <div class="field grow">
+            <label for="p-hora-recepcion">Hora de recepción</label>
+            <input id="p-hora-recepcion" type="time">
+          </div>
+          <div class="field grow">
+            <label for="p-hora-procesamiento">Hora de procesamiento</label>
+            <input id="p-hora-procesamiento" type="time">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TABLA PACIENTE SOLO PARA PDF -->
+  <div class="print-patient-table print-only" style="display:none">
+    <!-- FILA 1: paciente · cónyuge · institución -->
+    <div class="print-patient-cell">
+      <span class="pc-lbl">Nombre del paciente</span>
+      <span class="pc-val" id="pp-nombre"></span>
+      <span class="pc-val" id="pp-edad-line" style="font-size:11px; font-weight:500; color:#555;"></span>
+    </div>
+    <div class="print-patient-cell ppc-meta">
+      <span class="pc-lbl">T&#233;cnica</span>
+      <span class="pc-val-sm" id="pp-tecnica-display"></span>
+    </div>
+    <div class="print-patient-cell">
+      <span class="pc-lbl">Nombre del c&#243;nyuge</span>
+      <span class="pc-val" id="pp-conyuge"></span>
+      <span class="pc-val" id="pp-edad-conyuge-line" style="font-size:11px"></span>
+    </div>
+    <div class="print-patient-cell">
+      <span class="pc-lbl">Instituci&#243;n</span>
+      <span class="pc-val" id="pp-medico"></span>
+    </div>
+    <!-- FILA 2: médico · fecha · abstinencia · operador · tipo muestra -->
+    <div class="print-patient-cell ppc-meta">
+      <span class="pc-lbl">M&#233;dico</span>
+      <span class="pc-val-sm" id="pp-medico-sub-display"></span>
+    </div>
+    <div class="print-patient-cell ppc-meta">
+      <span class="pc-lbl">Fecha</span>
+      <span class="pc-val-sm" id="pp-fecha-display"></span>
+    </div>
+    <div class="print-patient-cell ppc-meta">
+      <span class="pc-lbl">D&iacute;as de abstinencia</span>
+      <span class="pc-val-sm" id="pp-abstinencia-display"></span>
+    </div>
+    <div class="print-patient-cell ppc-meta">
+      <span class="pc-lbl">Operador</span>
+      <span class="pc-val-sm" id="pp-operador-display"></span>
+    </div>
+    <div class="print-patient-cell ppc-meta">
+      <span class="pc-lbl">Tipo de muestra</span>
+      <span class="pc-val-sm" id="pp-tipo-muestra-display"></span>
+    </div>
+    <!-- FILA 3: horarios -->
+    <div class="print-patient-cell ppc-hora">
+      <span class="pc-lbl">Hora de emisi&#243;n</span>
+      <span class="pc-val-sm" id="pp-hora-e">&#8212;</span>
+    </div>
+    <div class="print-patient-cell ppc-hora">
+      <span class="pc-lbl">Hora de recepci&#243;n</span>
+      <span class="pc-val-sm" id="pp-hora-r">&#8212;</span>
+    </div>
+    <div class="print-patient-cell ppc-hora">
+      <span class="pc-lbl">Hora de procesamiento</span>
+      <span class="pc-val-sm" id="pp-hora-p">&#8212;</span>
+    </div>
+  </div>
+
+
+  <div class="panels">
+
+    <!-- PANEL IZQUIERDO: PAGINADO -->
+    <div class="panel">
+      <div class="page-indicator">
+        <span class="page-title" id="current-page-title">Vol. y Conc. Inicial</span>
+        <div class="page-dots" id="page-dots"></div>
+      </div>
+
+      <!-- PÁGINA 1: VOLUMEN Y CONCENTRACIÓN INICIAL -->
+      <div class="page-content active" id="page-1">
+        <div class="cards-grid col-2" style="margin-top:10px">
+          <div class="card">
+            <div class="card-label">Volumen inicial</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-vol-ini" step="0.01" oninput="computeAll()">
+                <span class="card-unit">ml</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-vol-ini', -0.01)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-vol-ini', 0.01)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Concentración de espermatozoides</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-conc-ini" step="0.01" oninput="computeAll()">
+                <span class="card-unit">x10⁶ / ml</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-conc-ini', -0.01)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-conc-ini', 0.01)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 2: MOTILIDAD MUESTRA EYACULADA -->
+      <div class="page-content" id="page-2">
+        <div class="cards-grid col-2" style="margin-top:10px">
+          <div class="card">
+            <div class="card-label">Espermatozoides con motilidad progresiva</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-eye-prog" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-eye-prog', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-eye-prog', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Espermatozoides con motilidad no progresiva</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-eye-noprog" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-eye-noprog', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-eye-noprog', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Espermatozoides inmótiles</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-eye-nomot" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-eye-nomot', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-eye-nomot', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card auto-card">
+            <div class="card-label">Total de espermatozoides contados</div>
+            <div class="card-input-row">
+              <input class="card-input auto-input" type="number" id="m-eye-total" readonly tabindex="-1">
+              <span class="card-unit">N° espz</span>
+            </div>
+          </div>
+          <div class="card auto-card" style="grid-column:1/-1">
+            <div class="card-label">Recuento de espermatozoides motiles (REM pre-capacitación)</div>
+            <div class="card-input-row">
+              <input class="card-input auto-input" type="number" id="m-rem-pre" readonly tabindex="-1">
+              <span class="card-unit">x10⁶ / ml</span>
+            </div>
+          </div>
+          <div class="sum-warning" id="warn-eye"></div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 3: MOTILIDAD MUESTRA PROCESADA -->
+      <div class="page-content" id="page-3">
+        <div class="cards-grid col-2" style="margin-top:10px">
+          <div class="card">
+            <div class="card-label">Espermatozoides con motilidad progresiva</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-proc-prog" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-proc-prog', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-proc-prog', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Espermatozoides con motilidad no progresiva</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-proc-noprog" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-proc-noprog', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-proc-noprog', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Espermatozoides inmótiles</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-proc-nomot" step="1" oninput="computeAll()">
+                <span class="card-unit">N° espz</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-proc-nomot', -1)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-proc-nomot', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card auto-card">
+            <div class="card-label">Total de espermatozoides contados</div>
+            <div class="card-input-row">
+              <input class="card-input auto-input" type="number" id="m-proc-total" readonly tabindex="-1">
+              <span class="card-unit">N° espz</span>
+            </div>
+          </div>
+          <div class="card auto-card" style="grid-column:1/-1">
+            <div class="card-label">Recuento de espermatozoides motiles (REM post-capacitación)</div>
+            <div class="card-input-row">
+              <input class="card-input auto-input" type="number" id="m-rem-post" readonly tabindex="-1">
+              <span class="card-unit">x10⁶ / ml</span>
+            </div>
+          </div>
+          <div class="sum-warning" id="warn-proc"></div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 4: VOLUMEN Y CONCENTRACIÓN FINAL -->
+      <div class="page-content" id="page-4">
+        <div class="cards-grid col-2" style="margin-top:10px">
+          <div class="card">
+            <div class="card-label">Volumen final</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-vol-fin" step="0.01" value="0.3" oninput="computeAll()">
+                <span class="card-unit">ml</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-vol-fin', -0.01)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-vol-fin', 0.01)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Concentración de espermatozoides</div>
+            <div class="card-input-row">
+              <div class="card-value-box">
+                <input class="card-input" type="number" id="m-conc-fin" step="0.01" oninput="computeAll()">
+                <span class="card-unit">x10⁶ / ml</span>
+              </div>
+              <div class="card-stepper">
+                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-conc-fin', -0.01)">–</button>
+                <div class="stepper-divider"></div>
+                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-conc-fin', 0.01)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAV -->
+      <div class="page-nav no-print">
+        <button class="nav-btn" id="btn-prev" onclick="changePage(-1)" disabled>← Anterior</button>
+        <button class="nav-btn next" id="btn-next" onclick="changePage(1)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PANEL DERECHO: REPORTE PDF -->
+    <div class="panel hide-on-screen">
+      <div class="panel-head">Reporte</div>
+
+      <div class="section-head" style="margin-top:4px;">I. Características de Muestra Nativa</div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Días de abstinencia</div></div>
+        <span class="out-value" id="out-abstinencia-rep">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Volumen <span class="unit">ml</span></div></div>
+        <span class="out-value" id="out-vol-ini-rep">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Viscosidad</div></div>
+        <span class="out-value" id="out-viscosidad-rep">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Motilidad progresiva</div></div>
+        <span class="out-value" id="out-bb">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Concentración de espermatozoides/ml</div></div>
+        <span class="out-value" id="out-conc-ini-rep">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Concentración total en eyaculado</div></div>
+        <span class="out-value" id="out-aa">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">REM pre-capacitación</div></div>
+        <span class="out-value" id="out-rem-pre">—</span>
+      </div>
+
+      <div class="section-head">II. Características de Muestra Capacitada</div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Método de separación</div></div>
+        <span class="out-value" id="out-metodo-rep">—</span>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="row-label">Volumen inseminación <span class="unit">ml</span></div></div>
+        <span class="out-value" id="out-vol-fin-rep">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Motilidad progresiva</div></div>
+        <span class="out-value" id="out-proc-prog">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Concentración de espermatozoides por ml</div></div>
+        <span class="out-value" id="out-conc-fin-rep">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Total de espermatozoides a inseminar</div></div>
+        <span class="out-value" id="out-conc-fin-total">—</span>
+      </div>
+      <div class="row highlight">
+        <div class="row-text"><div class="row-label">Total espermatozoides móviles a inseminar</div></div>
+        <span class="out-value" id="out-motiles-inseminar">—</span>
+      </div>
+
+      <!-- IDs ocultos para que computeAll() no rompa -->
+      <span id="out-motTotal" style="display:none"></span>
+      <span id="out-motNoProg" style="display:none"></span>
+      <span id="out-noMot" style="display:none"></span>
+      <span id="out-proc-motTotal" style="display:none"></span>
+      <span id="out-proc-noprog" style="display:none"></span>
+      <span id="out-proc-nomot" style="display:none"></span>
+      <div class="chart-wrap" id="motility-chart-wrap" style="display:none">
+        <svg id="motility-pie" viewBox="0 0 320 260" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+    </div>
+
+  </div>
+
+  </div>
+  <!-- FIN HOJA 1 -->
+
+  <div class="print-sheet print-sheet-2">
+
+  <div class="page-print-header print-only">
+    <div class="title-block">
+      <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/logo-pranor-png.webp" alt="Pranor" class="print-logo" style="height:38px; width:auto; display:none;">
+      <h1 id="print-title-p2">Capacitación Espermática</h1>
+    </div>
+    <div class="print-header-right no-screen" style="display:none">
+      <img src="https://raw.githubusercontent.com/BryanAquino02/concebir-assets/main/Captura-de-pantalla-2024-12-23-a-las-15.13.42%20(1).png" alt="ISO 9001" class="print-iso-badge">
+      <div class="print-informe-block">
+        <span class="print-informe-lbl">Código de muestra</span>
+        <span class="print-informe-num js-informe-num"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRÁFICO COMPARATIVO MOTILIDAD -->
+  <div class="motility-compare-wrap hide-on-screen">
+    <div class="rem-post-card">
+      <span class="rem-post-label">REM post-capacitación</span>
+      <span class="rem-post-value" id="out-rem-post">—</span>
+    </div>
+    <div class="motility-compare-title">Comparativa de Motilidad</div>
+    <svg id="motility-stacked-chart" viewBox="0 0 400 120" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <!-- barras se dibujan por JS -->
+    </svg>
+    <div class="motility-legend">
+      <span class="leg-item"><span class="leg-dot" style="background:#2a8fa3"></span>Progresiva</span>
+      <span class="leg-item"><span class="leg-dot" style="background:#f0a500"></span>No progresiva</span>
+      <span class="leg-item"><span class="leg-dot" style="background:#d0d5dd"></span>Inmótil</span>
+    </div>
+  </div>
+
+  <!-- OBSERVACIONES -->
+  <div class="obs-section">
+    <div class="obs-title">Observaciones:</div>
+    <textarea class="obs-textarea no-print" id="obs-texto" placeholder="Anotaciones clínicas del profesional..." rows="3" oninput="syncObs()"></textarea>
+    <div class="obs-print print-only" id="obs-print" style="display:none"></div>
+  </div>
+
+  <!-- TABLA VALORES NORMALES OMS 2021 -->
+  <div class="actions no-print">
+    <button class="primary" onclick="document.getElementById('print-timestamp').textContent = new Date().toLocaleString('es-PE'); window.print();">Imprimir / Guardar PDF</button>
+    <button class="ghost" onclick="resetAll()">Nueva muestra</button>
+    <button class="ghost" onclick="loadDemo()" style="border-color:#1F4E96;color:#1F4E96;" title="Carga valores dentro de rangos normales OMS 2021">Demo (valores normales)</button>
+  </div>
+
+  <div class="print-only" style="margin:30px 24px 0; padding:10px 14px; border-left:4px solid #0d6e8a; background:#f0f7fa; font-size:12px; color:#333; line-height:1.7;">
+    <strong>Nota:</strong> El resultado de este análisis sólo es válido para la muestra emitida. La muestra de semen fue emitida en un acto no supervisado por el laboratorio.
+  </div>
+
+  <div class="firma-section">
+    <div class="firma-espacio-firma"></div>
+    <div class="firma-linea"></div>
+    <input class="firma-input firma-nombre-input no-print" type="text" id="firma-nombre" placeholder="Nombre del profesional" oninput="syncFirma()">
+    <input class="firma-input firma-dato-input no-print" type="text" id="firma-cargo" placeholder="Cargo (ej. Biólogo)" oninput="syncFirma()">
+    <input class="firma-input firma-dato-input no-print" type="text" id="firma-cbp" placeholder="C.B.P. 0000" oninput="syncFirma()">
+    <div class="firma-nombre print-only" id="firma-nombre-print" style="display:none"></div>
+    <div class="firma-dato print-only" id="firma-cargo-print" style="display:none"></div>
+    <div class="firma-dato print-only" id="firma-cbp-print" style="display:none"></div>
+  </div>
+
+  </div>
+  <!-- FIN HOJA 2 -->
+
+  <footer></footer>
+</div>
+
+<script>
+  // PAGINATION
+  const PAGES = [
+    { id:'page-1', title:'Vol. y Conc. Inicial' },
+    { id:'page-2', title:'Motilidad — Muestra Eyaculada' },
+    { id:'page-3', title:'Motilidad — Muestra Procesada' },
+    { id:'page-4', title:'Vol. y Conc. Final' },
+  ];
+  let currentPage = 0;
+
+  function buildDots(){
+    const container = document.getElementById('page-dots');
+    PAGES.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'page-dot' + (i === 0 ? ' active' : '');
+      dot.id = 'dot-' + i;
+      container.appendChild(dot);
+    });
+  }
+
+  let appReady = false;
+  function showPage(index){
+    PAGES.forEach((p, i) => {
+      const el = document.getElementById(p.id);
+      el.classList.toggle('active', i === index);
+      document.getElementById('dot-' + i).classList.toggle('active', i === index);
+    });
+    document.getElementById('current-page-title').textContent = PAGES[index].title;
+    document.getElementById('btn-prev').disabled = (index === 0);
+    const nextBtn = document.getElementById('btn-next');
+    if(index === PAGES.length - 1){
+      nextBtn.textContent = '✓ Listo';
+      nextBtn.disabled = true;
+    } else {
+      nextBtn.textContent = 'Siguiente →';
+      nextBtn.disabled = false;
+    }
+    currentPage = index;
+  }
+
+  function changePage(dir){
+    const next = currentPage + dir;
+    if(next >= 0 && next < PAGES.length){ showPage(next); if(appReady) computeAll(); }
+  }
+
+  buildDots();
+  showPage(0);
+
+  function calcEdad(){
+    const fechaNac = document.getElementById('p-fecha-nac').value;
+    const edadEl = document.getElementById('p-edad');
+    if(!fechaNac){ edadEl.value = ''; return; }
+    const hoy = new Date();
+    const nac = new Date(fechaNac + 'T00:00:00');
+    let edad = hoy.getFullYear() - nac.getFullYear();
+    const m = hoy.getMonth() - nac.getMonth();
+    if(m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+    edadEl.value = edad >= 0 ? edad + ' años' : '';
+  }
+
+  // CALCULATION HELPERS
+  function val(id){
+    const v = parseFloat(document.getElementById(id).value);
+    return isFinite(v) ? v : NaN;
+  }
+  function setOut(id, value, decimals, unit){
+    const el = document.getElementById(id);
+    el.textContent = isFinite(value) ? value.toFixed(decimals) + (unit ? ' '+unit : '') : '—';
+  }
+  function pct(num, den){
+    return (isFinite(num) && isFinite(den) && den > 0) ? (num/den)*100 : NaN;
+  }
+  function checkSum(partIds, totalId, warnId){
+    const total = val(totalId);
+    const parts = partIds.map(id => val(id));
+    const anyEntered = parts.some(v => isFinite(v));
+    const sum = parts.reduce((acc, v) => acc + (isFinite(v) ? v : 0), 0);
+    const warnEl = document.getElementById(warnId);
+    if(isFinite(total) && anyEntered && Math.abs(sum - total) > 0.001){
+      warnEl.textContent = 'La suma (' + sum + ') no coincide con el total contado (' + total + ').';
+    } else {
+      warnEl.textContent = '';
+    }
+  }
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+
+  function drawMotilityPie(prog, noProg, inmov){
+    const svg = document.getElementById('motility-pie');
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    const cx = 160, cy = 105, r = 85;
+
+    function emptyMessage(){
+      const t = document.createElementNS(SVG_NS, 'text');
+      t.setAttribute('x', cx); t.setAttribute('y', cy);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('font-size', '12'); t.setAttribute('fill', '#9AA1AE');
+      t.textContent = 'Completa la motilidad para ver el grafico';
+      svg.appendChild(t);
+    }
+    const values = [prog, noProg, inmov];
+    if(!values.every(isFinite)){ emptyMessage(); return; }
+
+    const slices = [
+      { label: 'Progresiva',    value: Math.max(prog, 0),   color: '#1F4E96' },
+      { label: 'No Progresiva', value: Math.max(noProg, 0), color: '#2E7D32' },
+      { label: 'Inmótiles',     value: Math.max(inmov, 0),  color: '#C0392B' }
+    ];
+    const total = slices.reduce((acc, s) => acc + s.value, 0);
+    if(total <= 0){ emptyMessage(); return; }
+
+    function polar(angleDeg, radius){
+      const rad = (angleDeg - 90) * Math.PI / 180;
+      return { x: cx + radius * Math.cos(rad), y: cy + radius * Math.sin(rad) };
+    }
+
+    let cumAngle = 0;
+    slices.forEach(s => {
+      const angle = (s.value / total) * 360;
+      if(angle > 0.05){
+        const start = cumAngle, end = cumAngle + angle;
+        const p1 = polar(start, r), p2 = polar(end, r);
+        const largeArc = angle > 180 ? 1 : 0;
+        const pathEl = document.createElementNS(SVG_NS, 'path');
+        pathEl.setAttribute('d', "M " + cx + " " + cy + " L " + p1.x + " " + p1.y + " A " + r + " " + r + " 0 " + largeArc + " 1 " + p2.x + " " + p2.y + " Z");
+        pathEl.setAttribute('fill', s.color);
+        pathEl.setAttribute('stroke', '#fff');
+        pathEl.setAttribute('stroke-width', '2');
+        svg.appendChild(pathEl);
+
+        if(angle > 20){
+          const mid = start + angle / 2;
+          const lp = polar(mid, r * 0.62);
+          const pctText = document.createElementNS(SVG_NS, 'text');
+          pctText.setAttribute('x', lp.x); pctText.setAttribute('y', lp.y + 5);
+          pctText.setAttribute('text-anchor', 'middle');
+          pctText.setAttribute('font-size', '13');
+          pctText.setAttribute('font-weight', '700');
+          pctText.setAttribute('fill', '#fff');
+          pctText.textContent = s.value.toFixed(0) + '%';
+          svg.appendChild(pctText);
+        }
+      }
+      cumAngle += angle;
+    });
+
+    const legendY = cy + r + 20;
+    const visibleSlices = slices.filter(s => s.value > 0);
+    const itemW = 100;
+    const totalW = visibleSlices.length * itemW;
+    const startX = cx - totalW / 2 + 8;
+
+    visibleSlices.forEach((s, idx) => {
+      const lx = startX + idx * itemW;
+      const rect = document.createElementNS(SVG_NS, 'rect');
+      rect.setAttribute('x', lx); rect.setAttribute('y', legendY);
+      rect.setAttribute('width', 12); rect.setAttribute('height', 12);
+      rect.setAttribute('rx', 3); rect.setAttribute('fill', s.color);
+      svg.appendChild(rect);
+
+      const labelEl = document.createElementNS(SVG_NS, 'text');
+      labelEl.setAttribute('x', lx + 16); labelEl.setAttribute('y', legendY + 11);
+      labelEl.setAttribute('font-size', '11'); labelEl.setAttribute('fill', '#16213D');
+      labelEl.textContent = s.label + ' ' + s.value.toFixed(0) + '%';
+      svg.appendChild(labelEl);
+    });
+  }
+
+
+  function stepCard(id, delta){
+    const input = document.getElementById(id);
+    if(!input) return;
+    const step = parseFloat(input.getAttribute('step')) || 1;
+    const decimals = (input.getAttribute('step') || '1').includes('.') ? (input.getAttribute('step').split('.')[1] || '').length : 0;
+    const current = parseFloat(input.value) || 0;
+    let next = current + delta;
+    const min = input.hasAttribute('min') ? parseFloat(input.getAttribute('min')) : 0;
+    if(!isNaN(min) && next < min) next = min;
+    next = parseFloat(next.toFixed(decimals));
+    input.value = next;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function computeAll(){
+    const volIni  = val('m-vol-ini'),  concIni  = val('m-conc-ini');
+    const volFin  = val('m-vol-fin'),  concFin  = val('m-conc-fin');
+    const eyeProg = val('m-eye-prog'), eyeNoProg = val('m-eye-noprog'), eyeNoMot = val('m-eye-nomot');
+    const procProg = val('m-proc-prog'), procNoProg = val('m-proc-noprog'), procNoMot = val('m-proc-nomot');
+    // AUTO-TOTALES EYACULADA
+    const eyeTotal = [eyeProg, eyeNoProg, eyeNoMot].reduce((acc,v) => isFinite(v) ? acc+v : acc, 0);
+    const anyEye   = [eyeProg, eyeNoProg, eyeNoMot].some(v => isFinite(v));
+    document.getElementById('m-eye-total').value  = anyEye  ? eyeTotal  : '';
+
+    // REM pre = E_mp = (Ci × Vi) × (s/v)
+    const eTot   = (isFinite(concIni) && isFinite(volIni)) ? concIni * volIni : NaN;
+    const pmpPre = (isFinite(eyeProg) && isFinite(eyeTotal) && eyeTotal > 0) ? eyeProg / eyeTotal : NaN;
+    const remPre = (isFinite(eTot) && isFinite(pmpPre)) ? eTot * pmpPre : NaN;
+    const remPreEl = document.getElementById('m-rem-pre');
+    if(remPreEl) remPreEl.value = isFinite(remPre) ? remPre.toFixed(2) : '';
+
+    // AUTO-TOTALES PROCESADA
+    const procTotal = [procProg, procNoProg, procNoMot].reduce((acc,v) => isFinite(v) ? acc+v : acc, 0);
+    const anyProc   = [procProg, procNoProg, procNoMot].some(v => isFinite(v));
+    document.getElementById('m-proc-total').value = anyProc ? procTotal : '';
+
+    // CONCENTRACIÓN INICIAL TOTAL: volIni × concIni
+    const concIniTotal = (isFinite(volIni) && isFinite(concIni)) ? volIni * concIni : NaN;
+    setOut('out-aa', concIniTotal, 2, 'x10\u2076 total');
+
+    // MOTILIDAD EYACULADA
+    const eyeTotVal = anyEye ? eyeTotal : NaN;
+    const eyeProgPct    = pct(eyeProg,   eyeTotVal);
+    const eyeNoProgPct  = pct(eyeNoProg, eyeTotVal);
+    const eyeNoMotPct   = pct(eyeNoMot,  eyeTotVal);
+    const eyeMotTotal   = pct((isFinite(eyeProg)?eyeProg:0)+(isFinite(eyeNoProg)?eyeNoProg:0), eyeTotVal);
+
+    setOut('out-motTotal',    eyeMotTotal,  1, '%');
+    setOut('out-bb',          eyeProgPct,   1, '%');
+    setOut('out-motNoProg',   eyeNoProgPct, 1, '%');
+    setOut('out-noMot',       eyeNoMotPct,  1, '%');
+    setOut('out-rem-pre',     remPre,       2, 'x10\u2076');
+    drawMotilityPie(eyeProgPct, eyeNoProgPct, eyeNoMotPct);
+
+    // MOTILIDAD PROCESADA
+    const procTotVal = anyProc ? procTotal : NaN;
+    const procProgPct   = pct(procProg,   procTotVal);
+    const procNoProgPct = pct(procNoProg, procTotVal);
+    const procNoMotPct  = pct(procNoMot,  procTotVal);
+    const procMotTotal  = pct((isFinite(procProg)?procProg:0)+(isFinite(procNoProg)?procNoProg:0), procTotVal);
+
+    setOut('out-proc-motTotal',  procMotTotal,  1, '%');
+    setOut('out-proc-prog',      procProgPct,   1, '%');
+    drawStackedChart(eyeProgPct, eyeNoProgPct, eyeNoMotPct, procProgPct, procNoProgPct, procNoMotPct);
+    setOut('out-proc-noprog',    procNoProgPct, 1, '%');
+    setOut('out-proc-nomot',     procNoMotPct,  1, '%');
+
+    // CONCENTRACIÓN FINAL TOTAL: volFin × concFin
+    const concFinTotal = (isFinite(volFin) && isFinite(concFin)) ? volFin * concFin : NaN;
+    setOut('out-conc-fin-total', concFinTotal, 2, 'x10\u2076');
+
+    // REM post = concFin × volFin
+    const remPost = concFinTotal;
+    const remPostEl = document.getElementById('m-rem-post');
+    if(remPostEl) remPostEl.value = isFinite(remPost) ? remPost.toFixed(2) : '';
+    setOut('out-rem-post', remPost, 2, 'x10\u2076/ml');
+
+    // TOTAL MÓVILES A INSEMINAR: concFinTotal × (motProg procesada %)
+    const motileIns = (isFinite(concFinTotal) && isFinite(procProgPct)) ? concFinTotal * (procProgPct / 100) : NaN;
+    setOut('out-motiles-inseminar', motileIns, 2, 'x10\u2076');
+
+    // CAMPOS DIRECTOS REPORTE
+    const abstVal = (document.getElementById('p-abstinencia').value || '').trim();
+    document.getElementById('out-abstinencia-rep').textContent = abstVal ? abstVal + ' día' + (abstVal == '1' ? '' : 's') : '—';
+    setOut('out-vol-ini-rep',  volIni,  2, 'ml');
+    setOut('out-conc-ini-rep', concIni, 2, 'x10\u2076/ml');
+    setOut('out-vol-fin-rep',  volFin,  2, 'ml');
+    setOut('out-conc-fin-rep', concFin, 2, 'x10\u2076/ml');
+    const visc = document.getElementById('p-viscosidad');
+    document.getElementById('out-viscosidad-rep').textContent = (visc && visc.value) ? visc.value : '—';
+    const ref = document.getElementById('p-referencia');
+    document.getElementById('out-metodo-rep').textContent = (ref && ref.value.trim()) ? ref.value.trim() : '—';
+
+  }
+
+  function resetAll(){
+    ['p-nombre','p-referencia','p-fecha-nac','p-abstinencia','p-conyuge','p-medico','p-institucion','p-informe','p-operador','p-fecha','p-hora-emision','p-hora-recepcion','p-hora-procesamiento'].forEach(id=>{
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('p-edad').value = '';
+    calcEdad();
+    ['m-vol-ini','m-conc-ini','m-eye-prog','m-eye-noprog','m-eye-nomot',
+     'm-proc-prog','m-proc-noprog','m-proc-nomot','m-conc-fin'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+    ['m-eye-total','m-proc-total'].forEach(id=>{ const el = document.getElementById(id); if(el) el.value = ''; });
+    document.getElementById('m-vol-fin').value = '0.3';
+    const viscEl = document.getElementById('p-viscosidad'); if(viscEl) viscEl.selectedIndex = 0;
+    const tipoEl = document.getElementById('p-tipo-muestra'); if(tipoEl) tipoEl.selectedIndex = 0;
+    showPage(0);
+    const obsEl = document.getElementById('obs-texto'); if(obsEl){ obsEl.value=''; syncObs(); }
+    computeAll();
+  }
+
+  computeAll();
+  appReady = true;
+
+  function syncFirma(){
+    const nombre = document.getElementById('firma-nombre').value.trim();
+    const cargo  = document.getElementById('firma-cargo').value.trim();
+    const cbp    = document.getElementById('firma-cbp').value.trim();
+    document.getElementById('firma-nombre-print').textContent = nombre || 'Nombre del profesional';
+    document.getElementById('firma-cargo-print').textContent  = cargo  || 'Biólogo';
+    document.getElementById('firma-cbp-print').textContent    = cbp    || 'C.B.P. 0000';
+  }
+  syncFirma();
+
+  function syncObs(){
+    const txt = document.getElementById('obs-texto').value;
+    document.getElementById('obs-print').textContent = txt;
+  }
+  syncObs();
+
+
+
+  // Sync print patient table
+  function syncPrintPatient(){
+    const nombre = document.getElementById('p-nombre').value;
+    const conyuge = document.getElementById('p-conyuge').value;
+    const medico = document.getElementById('p-medico').value;
+    const fecha = document.getElementById('p-fecha').value;
+    const abstinencia = document.getElementById('p-abstinencia').value;
+    const informe = document.getElementById('p-informe').value;
+    const referencia = document.getElementById('p-referencia').value;
+    const fechaNac = document.getElementById('p-fecha-nac').value;
+    const institucion = document.getElementById('p-institucion').value;
+    const operador = document.getElementById('p-operador').value;
+    const horaEmision = document.getElementById('p-hora-emision').value;
+    const horaRecepcion = document.getElementById('p-hora-recepcion').value;
+    const horaProcesamiento = document.getElementById('p-hora-procesamiento').value;
+
+    // Fila 1
+    document.getElementById('pp-nombre').textContent = nombre || '—';
+    const edadVal = document.getElementById('p-edad').value;
+    document.getElementById('pp-edad-line').textContent = edadVal || '';
+    document.getElementById('pp-tecnica-display').textContent = referencia || '—';
+    document.getElementById('pp-conyuge').textContent = conyuge || '—';
+    document.getElementById('pp-edad-conyuge-line').textContent = '';
+    document.getElementById('pp-medico').textContent = institucion || '—';
+    const medicoSubEl = document.getElementById('pp-medico-sub-display');
+    if(medicoSubEl) medicoSubEl.textContent = medico || '—';
+
+    // Fila 2: cada dato en su propia celda
+    if(fecha){ const d = new Date(fecha + 'T00:00:00'); document.getElementById('pp-fecha-display').textContent = d.toLocaleDateString('es-PE', {day:'numeric', month:'short', year:'numeric'}); }
+    else { document.getElementById('pp-fecha-display').textContent = '—'; }
+
+    document.getElementById('pp-abstinencia-display').textContent = abstinencia ? abstinencia + ' día' + (abstinencia == 1 ? '' : 's') : '—';
+
+    document.getElementById('pp-hora-e').textContent = horaEmision || '—';
+    document.getElementById('pp-hora-r').textContent = horaRecepcion || '—';
+    document.getElementById('pp-hora-p').textContent = horaProcesamiento || '—';
+
+    document.getElementById('pp-operador-display').textContent = operador || '—';
+
+    const tipoMuestraEl = document.getElementById('p-tipo-muestra');
+    const tipoMuestra = tipoMuestraEl ? tipoMuestraEl.value : '';
+    document.getElementById('pp-tipo-muestra-display').textContent = tipoMuestra || '—';
+
+    document.querySelectorAll('.js-informe-num').forEach(el => { el.textContent = informe || '—'; });
+
+    // Título fijo: "Capacitación Espermática" (la técnica ya se muestra junto a la edad)
+    const tituloCompleto = 'Capacitación Espermática';
+    const titleEl = document.getElementById('print-title');
+    if(titleEl) titleEl.textContent = tituloCompleto;
+    const titleElP2 = document.getElementById('print-title-p2');
+    if(titleElP2) titleElP2.textContent = tituloCompleto;
+  }
+
+  ['p-nombre','p-referencia','p-fecha-nac','p-abstinencia','p-conyuge','p-medico','p-institucion','p-informe','p-operador','p-fecha','p-hora-emision','p-hora-recepcion','p-hora-procesamiento'].forEach(id => {
+    document.getElementById(id).addEventListener('input', syncPrintPatient);
+  });
+  document.getElementById('p-viscosidad').addEventListener('change', computeAll);
+  document.getElementById('p-tipo-muestra').addEventListener('change', syncPrintPatient);
+  document.getElementById('p-referencia').addEventListener('input', computeAll);
+  document.getElementById('p-referencia').addEventListener('change', computeAll);
+  document.getElementById('p-referencia').addEventListener('change', syncPrintPatient);
+  syncPrintPatient();
+
+
+
+  function loadDemo(){
+    document.getElementById('p-nombre').value       = 'García López, Carlos Eduardo';
+    document.getElementById('p-referencia').value   = 'Gradiente de densidad';
+    document.getElementById('p-conyuge').value      = 'García López, María';
+    document.getElementById('p-fecha-nac').value    = '1991-03-15';
+    calcEdad();
+    document.getElementById('p-informe').value      = 'ESP-2025-0847';
+    document.querySelectorAll('.js-informe-num').forEach(el => { el.textContent = 'ESP-2025-0847'; });
+    document.getElementById('p-fecha').value        = '2025-07-14';
+    document.getElementById('p-medico').value       = 'Dr. Ramírez Flores, Jorge';
+    document.getElementById('p-abstinencia').value  = '4';
+    document.getElementById('p-institucion').value  = 'Concebir - San Isidro';
+    document.getElementById('p-operador').value     = 'OP-001';
+    document.getElementById('p-hora-emision').value       = '08:30';
+    document.getElementById('p-hora-recepcion').value     = '08:45';
+    document.getElementById('p-hora-procesamiento').value = '09:00';
+    document.getElementById('p-tipo-muestra').value = 'Semen fresco';
+    document.getElementById('m-vol-ini').value   = '3.2';
+    document.getElementById('m-conc-ini').value  = '22';
+    document.getElementById('m-eye-prog').value  = '142';
+    document.getElementById('m-eye-noprog').value = '28';
+    document.getElementById('m-eye-nomot').value = '30';
+    document.getElementById('m-rem-pre').value   = '14.5';
+    document.getElementById('m-proc-prog').value  = '190';
+    document.getElementById('m-proc-noprog').value = '5';
+    document.getElementById('m-proc-nomot').value  = '5';
+    document.getElementById('m-rem-post').value   = '130';
+    document.getElementById('m-vol-fin').value   = '0.3';
+    document.getElementById('m-conc-fin').value  = '130';
+    computeAll();
+    syncPrintPatient();
+  }
+  function drawStackedChart(eyeProgPct, eyeNoProgPct, eyeNoMotPct, procProgPct, procNoProgPct, procNoMotPct){
+    const svg = document.getElementById('motility-stacked-chart');
+    if(!svg) return;
+
+    const W = 400, H = 120;
+    const barH = 22, gap = 14;
+    const labelW = 80, padR = 40, barW = W - labelW - padR;
+    const y1 = 30, y2 = y1 + barH + gap;
+    const colors = ['#2a8fa3','#f0a500','#d0d5dd'];
+
+    function buildBar(pcts, yPos){
+      let x = labelW, out = '';
+      pcts.forEach((p, i) => {
+        const w = (p / 100) * barW;
+        if(w > 0){
+          out += `<rect x="${x.toFixed(1)}" y="${yPos}" width="${w.toFixed(1)}" height="${barH}" fill="${colors[i]}" rx="2"/>`;
+          if(w > 22){
+            out += `<text x="${(x + w/2).toFixed(1)}" y="${(yPos + barH/2 + 4).toFixed(1)}" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">${p.toFixed(0)}%</text>`;
+          }
+          x += w;
+        }
+      });
+      return out;
+    }
+
+    const svgContent = `
+      <text x="0" y="${y1 + barH/2 + 4}" font-size="10.5" fill="#444" font-weight="600" dominant-baseline="middle">Nativa</text>
+      ${buildBar([eyeProgPct, eyeNoProgPct, eyeNoMotPct], y1)}
+      <text x="0" y="${y2 + barH/2 + 4}" font-size="10.5" fill="#444" font-weight="600" dominant-baseline="middle">Capacitada</text>
+      ${buildBar([procProgPct, procNoProgPct, procNoMotPct], y2)}
+      <line x1="${labelW}" y1="${H - 10}" x2="${W - padR}" y2="${H - 10}" stroke="#ccc" stroke-width="0.5"/>
+      <text x="${labelW}" y="${H}" font-size="8.5" fill="#aaa">0%</text>
+      <text x="${(labelW + barW/2).toFixed(1)}" y="${H}" font-size="8.5" fill="#aaa" text-anchor="middle">50%</text>
+      <text x="${(labelW + barW).toFixed(1)}" y="${H}" font-size="8.5" fill="#aaa" text-anchor="end">100%</text>
+    `;
+    svg.innerHTML = svgContent;
+  }
+
+</script>
+</body>
+</html>
