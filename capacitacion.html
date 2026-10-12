@@ -46,6 +46,12 @@
   }
   .switch-report:hover{ background:var(--accent-soft); }
   @media print{ .switch-report{ display:none !important; } }
+  .session-box{ display:inline-flex; align-items:center; gap:10px; font-size:13px; color:var(--ink-soft); }
+  .session-user{ font-weight:600; color:var(--ink); }
+  .session-user:empty{ display:none; }
+  .session-logout{ color:var(--ink-soft); text-decoration:underline; text-underline-offset:2px; }
+  .session-logout:hover{ color:var(--accent); }
+  @media print{ .session-box{ display:none !important; } }
 
   /* HEADER */
   header.top{
@@ -1270,6 +1276,10 @@
         <div class="title-row">
           <h1 id="print-title">Capacitación Espermática</h1>
           <a href="./" class="switch-report no-print">← Espermatograma</a>
+          <span class="session-box no-print">
+            <span class="session-user" id="session-user"></span>
+            <a href="/logout" class="session-logout">Cerrar sesión</a>
+          </span>
         </div>
         <p id="print-timestamp" style="font-size:9.5px; color:#8ab0cc; letter-spacing:.06em; text-transform:uppercase; margin:0;"></p>
       </div>
@@ -2270,6 +2280,14 @@
     svg.innerHTML = svgContent;
   }
 
+</script>
+<script>
+  // Muestra el usuario con sesión iniciada (cookie puesta por el login)
+  (function(){
+    var m = document.cookie.match(/(?:^|;\s*)pranor_usuario=([^;]+)/);
+    var el = document.getElementById('session-user');
+    if (m && el) el.textContent = decodeURIComponent(m[1]);
+  })();
 </script>
 </body>
 </html>
