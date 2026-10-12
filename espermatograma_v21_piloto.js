@@ -308,7 +308,7 @@ function syncVolumenFromMacros(){
 // No modifica ningún valor ingresado: solo marca los campos inválidos
 // y bloquea el botón de impresión mientras exista alguno.
 // ═══════════════════════════════════════════════
-const CAMPOS_ENTEROS = ['m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-n','m-o','m-leuco','m-no-leuco'];
+const CAMPOS_ENTEROS = ['m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-esp-anormales','m-n','m-o','m-leuco','m-no-leuco'];
 const CAMPOS_CON_LIMITE = {
   'm-a': LIMITES.volumen,
   'm-a-print': LIMITES.volumen,
