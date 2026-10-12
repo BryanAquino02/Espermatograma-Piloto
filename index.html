@@ -141,44 +141,64 @@
         </div>
       </div>
     </div>
-    <!--TOPGRID_MACROS_PLACEHOLDER-->
 
     <!-- TABLA PACIENTE SOLO PARA PDF -->
     <div class="print-patient-table print-only" style="display:none">
-      <div class="ppt-row-top">
-        <div class="print-patient-cell">
+      <div class="ppg">
+        <!-- Fila 1 -->
+        <div class="ppg-cell">
           <span class="pc-lbl">Nombre del paciente</span>
           <span class="pc-val" id="pp-nombre"></span>
-          <span class="pc-val" id="pp-edad-line" style="font-size:11px; font-weight:500; color:#555;"></span>
+          <span class="pc-sub" id="pp-edad-line"></span>
         </div>
-        <div class="print-patient-cell">
-          <span class="pc-lbl">Nombre del c&#243;nyuge</span>
+        <div class="ppg-cell">
+          <span class="pc-lbl">Nombre del cónyuge</span>
           <span class="pc-val" id="pp-conyuge"></span>
         </div>
-        <div class="print-patient-cell">
+        <div class="ppg-cell">
           <span class="pc-lbl">Días de abstinencia</span>
           <span class="pc-val" id="pp-abstinencia-display"></span>
         </div>
-        <div class="print-patient-cell">
+        <div class="ppg-cell">
           <span class="pc-lbl">Tipo de muestra</span>
           <span class="pc-val" id="pp-tipo-muestra"></span>
         </div>
-      </div>
-      <div class="ppt-row-bottom">
-        <div class="ppt-col-half">
-          <div class="ppt-subrow ppt-subrow-sede">
-            <div class="print-patient-cell ppc-meta ppt-sede-medico">
-              <div class="ppt-sede-line">
-                <span class="pc-lbl">Sede</span>
-                <span class="pc-val-sm" id="pp-medico"></span>
-              </div>
-              <div class="ppt-sede-line">
-                <span class="pc-lbl">M&#233;dico</span>
-                <span class="pc-val-sm" id="pp-medico-sub-display"></span>
-              </div>
-            </div>
-          </div>
+        <!-- Fila 2 -->
+        <div class="ppg-cell">
+          <span class="pc-lbl">Sede</span>
+          <span class="pc-val-sm" id="pp-medico"></span>
         </div>
+        <div class="ppg-cell">
+          <span class="pc-lbl">Médico</span>
+          <span class="pc-val-sm" id="pp-medico-sub-display"></span>
+        </div>
+        <div class="ppg-cell">
+          <span class="pc-lbl">Fecha</span>
+          <span class="pc-val-sm" id="pp-fecha-display"></span>
+        </div>
+        <div class="ppg-cell">
+          <span class="pc-lbl">Referencia</span>
+          <span class="pc-val-sm" id="pp-referencia-display"></span>
+        </div>
+        <!-- Fila 3 -->
+        <div class="ppg-cell">
+          <span class="pc-lbl">Operador</span>
+          <span class="pc-val-sm" id="pp-operador-display"></span>
+        </div>
+        <div class="ppg-cell">
+          <span class="pc-lbl">Hora de emisión</span>
+          <span class="pc-val-sm" id="pp-hora-e">—</span>
+        </div>
+        <div class="ppg-cell">
+          <span class="pc-lbl">Hora de recepción</span>
+          <span class="pc-val-sm" id="pp-hora-r">—</span>
+        </div>
+        <div class="ppg-cell">
+          <span class="pc-lbl">Hora de procesamiento</span>
+          <span class="pc-val-sm" id="pp-hora-p">—</span>
+        </div>
+      </div>
+    </div>
         <div class="ppt-col-half">
           <div class="ppt-subrow ppt-subrow-fecha">
             <div class="print-patient-cell ppc-meta ppt-fecha-horas">
