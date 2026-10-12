@@ -1064,7 +1064,7 @@
   .leg-dot{ width:8px; height:8px; border-radius:2px; display:inline-block; }
   .rem-post-card{
     display:flex; align-items:center; justify-content:center; gap:10px;
-    max-width:320px; margin:8px auto 18px; padding:16px 20px;
+    width:max-content; max-width:100%; margin:8px auto 18px; padding:16px 20px;
     background:#EAF6F5; border:2px solid var(--accent); border-radius:8px;
     white-space:nowrap;
   }
@@ -1476,10 +1476,10 @@
             </div>
           </div>
           <div class="card auto-card" style="grid-column:1/-1">
-            <div class="card-label">Recuento de espermatozoides motiles (REM post-capacitación)</div>
+            <div class="card-label">Total espermatozoides móviles a inseminar</div>
             <div class="card-input-row">
               <input class="card-input auto-input" type="number" id="m-rem-post" readonly tabindex="-1">
-              <span class="card-unit">x10⁶ / ml</span>
+              <span class="card-unit">x10⁶</span>
             </div>
           </div>
           <div class="sum-warning" id="warn-proc"></div>
@@ -1623,7 +1623,7 @@
   <!-- GRÁFICO COMPARATIVO MOTILIDAD -->
   <div class="motility-compare-wrap hide-on-screen">
     <div class="rem-post-card">
-      <span class="rem-post-label">REM post-capacitación</span>
+      <span class="rem-post-label">Total espermatozoides móviles a inseminar</span>
       <span class="rem-post-value" id="out-rem-post">—</span>
     </div>
     <div class="motility-compare-title">Comparativa de Motilidad</div>
@@ -1912,15 +1912,14 @@
     const concFinTotal = (isFinite(volFin) && isFinite(concFin)) ? volFin * concFin : NaN;
     setOut('out-conc-fin-total', concFinTotal, 2, 'x10\u2076');
 
-    // REM post = concFin × volFin
-    const remPost = concFinTotal;
-    const remPostEl = document.getElementById('m-rem-post');
-    if(remPostEl) remPostEl.value = isFinite(remPost) ? remPost.toFixed(2) : '';
-    setOut('out-rem-post', remPost, 2, 'x10\u2076/ml');
-
     // TOTAL MÓVILES A INSEMINAR: concFinTotal × (motProg procesada %)
     const motileIns = (isFinite(concFinTotal) && isFinite(procProgPct)) ? concFinTotal * (procProgPct / 100) : NaN;
     setOut('out-motiles-inseminar', motileIns, 2, 'x10\u2076');
+
+    // Tarjeta destacada (antes "REM post-capacitación"): muestra el total de móviles a inseminar
+    const remPostEl = document.getElementById('m-rem-post');
+    if(remPostEl) remPostEl.value = isFinite(motileIns) ? motileIns.toFixed(2) : '';
+    setOut('out-rem-post', motileIns, 2, 'x10\u2076');
 
     // CAMPOS DIRECTOS REPORTE
     const abstVal = (document.getElementById('p-abstinencia').value || '').trim();
