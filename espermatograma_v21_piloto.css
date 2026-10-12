@@ -1293,8 +1293,12 @@
     }
     .score-row {
       display: flex !important;
-      justify-content: space-between !important;
       padding: 2px 0 !important;
+    }
+    .score-row .score-label,
+    .score-row .score-value {
+      flex: 1 1 0 !important;
+      text-align: center !important;
     }
     .score-value {
       font-weight: 700 !important;
