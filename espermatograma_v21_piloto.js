@@ -453,6 +453,7 @@ function computeAll(){
   // XY — Total anormales (usado internamente para el índice de teratozoospermia): h+i+j+k+l
   const xy = sum([h,i,j,k,l]);
   const anyAnorm = [h,i,j,k,l].some(v => isFinite(v));
+  document.getElementById('m-anom-total').value = anyAnorm ? xy : '';
 
   // LEUCOCITOS: α × (µ/π) × 100
   const q = val('m-q');
