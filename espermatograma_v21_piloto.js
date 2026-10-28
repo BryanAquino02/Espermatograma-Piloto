@@ -484,8 +484,6 @@ function computeAll(){
   // LEUCOCITOS: α × (µ/π) × 100
   const q = val('m-q');
   setOutMillones('out-celulas-redondas', q, 'millones/ml');
-  // Leucocitos: ya no se cuentan en la interfaz (sin datos → "—" en el PDF)
-  setOut('out-leucocitos', NaN, 3, 'millones/ml');
 
   // ÍNDICE DE TERATOZOOSPERMIA: total de anomalías / espermatozoides anormales
   const espAnormales = val('m-esp-anormales');
