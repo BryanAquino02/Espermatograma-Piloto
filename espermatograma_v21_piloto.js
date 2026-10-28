@@ -438,7 +438,7 @@ function computeAll(){
   setOut('out-bb', bb, 1, '%');
   setOut('out-motNoProg', motNoProg, 1, '%');
   setOut('out-noMot', noMot, 1, '%');
-  setOut('out-motProgTotal', motProgTotal, 2, 'x10⁶');
+  setOut('out-motProgTotal', motProgTotal, 2, 'millones');
   drawMotilityPie(bb, motNoProg, noMot);
 
   // MORFOLOGÍA
