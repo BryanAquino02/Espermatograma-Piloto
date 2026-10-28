@@ -518,23 +518,16 @@
               </div>
             </div>
           </div>
-          <div class="card">
+          <div class="card auto-card">
             <div class="card-label">Espermatozoides no vivos</div>
             <div class="card-input-row">
-              <div class="card-value-box">
-                <input class="card-input" type="number" id="m-o" step="1" oninput="computeAll()">
-              </div>
-              <div class="card-stepper">
-                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-o', -1)">–</button>
-                <div class="stepper-divider"></div>
-                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-o', 1)">+</button>
-              </div>
+              <input class="card-input auto-input" type="number" id="m-o" readonly tabindex="-1">
             </div>
           </div>
           <div class="card auto-card">
             <div class="card-label">Total espermatozoides contados</div>
             <div class="card-input-row">
-              <input class="card-input auto-input" type="number" id="m-p" readonly tabindex="-1">
+              <input class="card-input auto-input" type="number" id="m-p" value="200" readonly tabindex="-1">
             </div>
 
           </div>
@@ -693,7 +686,7 @@
         <span class="out-value" id="out-at">—</span>
       </div>
       <div class="row highlight">
-        <div class="row-text"><div class="row-label">Espermatozoides anormales</div></div>
+        <div class="row-text"><div class="row-label">Total de formas anormales</div></div>
         <span class="out-value" id="out-anomTotal">—</span>
       </div>
       <div class="row">
