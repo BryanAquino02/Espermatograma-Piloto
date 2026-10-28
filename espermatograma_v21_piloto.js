@@ -25,7 +25,7 @@ const PAGES = [
   { id:'page-3', title:'Motilidad' },
   { id:'page-4', title:'Morfología' },
   { id:'page-5', title:'Vitalidad' },
-  { id:'page-6', title:'Leucocitos' },
+  { id:'page-6', title:'Células redondas' },
 ];
 let currentPage = 0;
 
@@ -321,7 +321,7 @@ function syncVolumenFromMacros(){
 // No modifica ningún valor ingresado: solo marca los campos inválidos
 // y bloquea el botón de impresión mientras exista alguno.
 // ═══════════════════════════════════════════════
-const CAMPOS_ENTEROS = ['m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-esp-anormales','m-n','m-leuco','m-no-leuco'];
+const CAMPOS_ENTEROS = ['m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-esp-anormales','m-n'];
 const CAMPOS_CON_LIMITE = {
   'm-a': LIMITES.volumen,
   'm-a-print': LIMITES.volumen,
@@ -409,7 +409,6 @@ function computeAll(){
   const n = val('m-n');
   const nValido = isFinite(n) && n >= 0 && n <= TOTAL_VITALIDAD;
   document.getElementById('m-o').value = nValido ? TOTAL_VITALIDAD - n : '';
-  const leuco = val('m-leuco'), noLeuco = val('m-no-leuco');
 
   // AUTO-TOTALES
   const f = sum([c,d,e]);
@@ -422,9 +421,6 @@ function computeAll(){
 
   document.getElementById('m-p').value = TOTAL_VITALIDAD;
 
-  const leucoTotal = sum([leuco,noLeuco]);
-  const anyLeuco = [leuco,noLeuco].some(v => isFinite(v));
-  document.getElementById('m-leuco-total').value = anyLeuco ? leucoTotal : '';
 
   // SYNC VOLUMEN TO MACROS PRINT
   const aPrintEl = document.getElementById('m-a-print');
@@ -488,8 +484,8 @@ function computeAll(){
   // LEUCOCITOS: α × (µ/π) × 100
   const q = val('m-q');
   setOutMillones('out-celulas-redondas', q, 'millones/ml');
-  const leucResult = (isFinite(q) && isFinite(leuco) && leucoTotal > 0) ? q * (leuco / leucoTotal) : NaN;
-  setOut('out-leucocitos', leucResult, 3, 'millones/ml');
+  // Leucocitos: ya no se cuentan en la interfaz (sin datos → "—" en el PDF)
+  setOut('out-leucocitos', NaN, 3, 'millones/ml');
 
   // ÍNDICE DE TERATOZOOSPERMIA: total de anomalías / espermatozoides anormales
   const espAnormales = val('m-esp-anormales');
@@ -755,10 +751,10 @@ function resetAll(){
   ['m-a','m-a-print','m-ph','m-licuefaccion','m-apariencia','m-viscosidad','m-aglutinacion',
    'm-globulos-rojos','m-debris',
    'm-b','m-q','m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-n',
-   'm-esp-anormales','m-leuco','m-no-leuco'].forEach(id=>{
+   'm-esp-anormales'].forEach(id=>{
     document.getElementById(id).value = '';
   });
-  ['m-f','m-esp-normales','m-anom-total','m-o','m-leuco-total'].forEach(id=>{ document.getElementById(id).value = ''; });
+  ['m-f','m-esp-normales','m-anom-total','m-o'].forEach(id=>{ document.getElementById(id).value = ''; });
   showPage(0);
   computeAll();
   document.getElementById('obs-texto').value = '';
@@ -881,8 +877,6 @@ function loadDemo(){
   document.getElementById('m-k').value            = '14';
   document.getElementById('m-l').value            = '10';
   document.getElementById('m-n').value            = '158';
-  document.getElementById('m-leuco').value        = '8';
-  document.getElementById('m-no-leuco').value     = '192';
   computeAll();
   syncPrintPatient();
 }
