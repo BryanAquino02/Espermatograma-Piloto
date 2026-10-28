@@ -423,7 +423,7 @@ function computeAll(){
 
   // aa — RECUENTO TOTAL: a × b
   const aa = (isFinite(a) && isFinite(b)) ? a * b : NaN;
-  setOut('out-b', b, 2, 'x10⁶/ml');
+  setOut('out-b', b, 2, 'millones/ml');
   setOut('out-aa', aa, 2, 'x10⁶/eyac.');
 
   // MOTILIDAD
@@ -478,9 +478,9 @@ function computeAll(){
   setOut('out-anomTotal', anormPct, 1, '%');   // espermatozoides anormales / total × 100
   // LEUCOCITOS: α × (µ/π) × 100
   const q = val('m-q');
-  setOut('out-celulas-redondas', q, 2, 'x10⁶/ml');
+  setOut('out-celulas-redondas', q, 2, 'millones/ml');
   const leucResult = (isFinite(q) && isFinite(leuco) && leucoTotal > 0) ? q * (leuco / leucoTotal) : NaN;
-  setOut('out-leucocitos', leucResult, 3, 'x10⁶/ml');
+  setOut('out-leucocitos', leucResult, 3, 'millones/ml');
 
   // ÍNDICE DE TERATOZOOSPERMIA: total de anomalías / espermatozoides anormales
   const espAnormales = val('m-esp-anormales');
@@ -558,7 +558,7 @@ function drawBarChart(concentracion, motTotal, morfNormal, vitalidad){
   const COLOR_REF = '#F5B400';   // línea/flecha referencia amarilla (contraste con celeste)
 
   const bars = [
-    { label: 'Concentración',    unit: 'x10⁶/ml', ref: 16, val: concentracion, max: 80  },
+    { label: 'Concentración',    unit: 'millones/ml', ref: 16, val: concentracion, max: 80  },
     { label: 'Motilidad total',  unit: '%',        ref: 42, val: motTotal,      max: 100 },
     { label: 'Morfología normal',unit: '%',        ref: 4,  val: morfNormal,    max: 20  },
     { label: 'Vitalidad',        unit: '%',        ref: 54, val: vitalidad,     max: 100 },
@@ -680,7 +680,7 @@ function computeConclusion(b, motTotal, morfNormal, vitalidad){
   if(!el) return;
   const diagnosticos = [];
 
-  // CONCENTRACIÓN (b en x10⁶/ml)
+  // CONCENTRACIÓN (b en millones/ml)
   if(isFinite(b)){
     if(b === 0){
       diagnosticos.push('azoospérmico');
