@@ -9,8 +9,12 @@ const LIMITES = {
   volumen:  {min:0, max:20},   // ml  (m-a, m-a-print)  — propuesto
   ph:       {min:5, max:10},   //     (m-ph)            — propuesto
   concentracion: {min:0, max:1000}, // x10^6/ml (m-b)    — propuesto
-  celulasRedondas: {min:0, max:1000} // (m-q)             — propuesto
+  celulasRedondas: {min:0, max:1000}, // (m-q)             — propuesto
+  vivos:    {min:0, max:200}   //     (m-n) no puede superar el total fijo de vitalidad
 };
+
+// Vitalidad: siempre se cuentan 200 espermatozoides; "no vivos" = 200 − vivos
+const TOTAL_VITALIDAD = 200;
 
 // Campos de identificación del paciente / muestra (listeners y reset)
 const CAMPOS_PACIENTE = ['p-nombre','p-referencia','p-fecha-nac','p-abstinencia','p-conyuge','p-medico','p-institucion','p-informe','p-tipo-muestra','p-operador','p-fecha','p-hora-emision','p-hora-recepcion','p-hora-procesamiento'];
@@ -308,13 +312,14 @@ function syncVolumenFromMacros(){
 // No modifica ningún valor ingresado: solo marca los campos inválidos
 // y bloquea el botón de impresión mientras exista alguno.
 // ═══════════════════════════════════════════════
-const CAMPOS_ENTEROS = ['m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-esp-anormales','m-n','m-o','m-leuco','m-no-leuco'];
+const CAMPOS_ENTEROS = ['m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-esp-anormales','m-n','m-leuco','m-no-leuco'];
 const CAMPOS_CON_LIMITE = {
   'm-a': LIMITES.volumen,
   'm-a-print': LIMITES.volumen,
   'm-ph': LIMITES.ph,
   'm-b': LIMITES.concentracion,
-  'm-q': LIMITES.celulasRedondas
+  'm-q': LIMITES.celulasRedondas,
+  'm-n': LIMITES.vivos
 };
 // Todos los campos numéricos editables (ninguno puede ser negativo)
 const CAMPOS_NUMERICOS = ['p-abstinencia','m-a','m-a-print','m-ph','m-b','m-q'].concat(CAMPOS_ENTEROS);
@@ -391,7 +396,10 @@ function computeAll(){
   const a = val('m-a'), b = val('m-b');
   const c = val('m-c'), d = val('m-d'), e = val('m-e');
   const g = val('m-g'), h = val('m-h'), i = val('m-i'), j = val('m-j'), k = val('m-k'), l = val('m-l');
-  const n = val('m-n'), o = val('m-o');
+  // VITALIDAD: no vivos se calcula solo (200 − vivos)
+  const n = val('m-n');
+  const nValido = isFinite(n) && n >= 0 && n <= TOTAL_VITALIDAD;
+  document.getElementById('m-o').value = nValido ? TOTAL_VITALIDAD - n : '';
   const leuco = val('m-leuco'), noLeuco = val('m-no-leuco');
 
   // AUTO-TOTALES
@@ -403,9 +411,7 @@ function computeAll(){
   const anyMorf = [g,h,i,j,k,l].some(v => isFinite(v));
   document.getElementById('m-esp-normales').value = isFinite(g) ? g : '';
 
-  const p = sum([n,o]);
-  const anyVit = [n,o].some(v => isFinite(v));
-  document.getElementById('m-p').value = anyVit ? p : '';
+  document.getElementById('m-p').value = TOTAL_VITALIDAD;
 
   const leucoTotal = sum([leuco,noLeuco]);
   const anyLeuco = [leuco,noLeuco].some(v => isFinite(v));
@@ -450,18 +456,19 @@ function computeAll(){
   function pctAnom(x){
     return (isFinite(anormPct) && anomReparto > 0) ? anormPct * (isFinite(x) ? x : 0) / anomReparto : NaN;
   }
-  function pctFila(x){ return isFinite(x) ? pctAnom(x) : NaN; }
+  // Filas del PDF: cada anomalía (e inmaduros) como % directo del total contado
+  // Ej.: 20 de cabeza sobre 100 contados → 20 %
   setOut('out-at', atVal, 1, '%');
-  setOut('out-anomCabeza', pctFila(h), 1, '%');
-  setOut('out-anomPieza',  pctFila(i), 1, '%');
-  setOut('out-anomFlagelo',pctFila(j), 1, '%');
-  setOut('out-otros',      pctFila(l), 1, '%');
-  setOut('out-inmaduros',  pct(k, totalEspz), 1, '%');   // aparte: no forma parte del reparto
+  setOut('out-anomCabeza', pct(h, totalEspz), 1, '%');
+  setOut('out-anomPieza',  pct(i, totalEspz), 1, '%');
+  setOut('out-anomFlagelo',pct(j, totalEspz), 1, '%');
+  setOut('out-otros',      pct(l, totalEspz), 1, '%');
+  setOut('out-inmaduros',  pct(k, totalEspz), 1, '%');
   drawMorphologyPie(atVal, pctAnom(h), pctAnom(i), pctAnom(j), 0, pctAnom(l));
 
   // & — VITALIDAD: n/p×100
-  const pVal = anyVit ? p : NaN;
-  setOut('out-amp', pct(n, pVal), 1, '%');
+  const vitalidad = nValido ? pct(n, TOTAL_VITALIDAD) : NaN;
+  setOut('out-amp', vitalidad, 1, '%');
 
   // XY — Total de anomalías (usado para el índice de teratozoospermia): h+i+j+l
   // (cabeza + pieza media + flagelo + otras formas; NO incluye inmaduros)
@@ -480,13 +487,13 @@ function computeAll(){
   setOut('out-tzi', (isFinite(espAnormales) && espAnormales > 0 && [h,i,j].some(v => isFinite(v))) ? sum([h,i,j]) / espAnormales : NaN, 2, '');   // (cabeza + pieza + flagelo) / anormales
   
   // BAR CHART
-  drawBarChart(b, motTotal, atVal, pct(n, pVal));
+  drawBarChart(b, motTotal, atVal, vitalidad);
 
   // CONCLUSIÓN CLÍNICA
-  computeConclusion(b, motTotal, atVal, pct(n, pVal));
+  computeConclusion(b, motTotal, atVal, vitalidad);
 
   // SCORE SEMINAL
-  computeScoreSeminal(b, motTotal, pct(n, pVal), atVal);
+  computeScoreSeminal(b, motTotal, vitalidad, atVal);
 }
 
 // ═══════════════════════════════════════════════
@@ -738,11 +745,11 @@ function resetAll(){
   calcEdad();
   ['m-a','m-a-print','m-ph','m-licuefaccion','m-apariencia','m-viscosidad','m-aglutinacion',
    'm-globulos-rojos','m-debris',
-   'm-b','m-q','m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-n','m-o',
+   'm-b','m-q','m-c','m-d','m-e','m-g','m-h','m-i','m-j','m-k','m-l','m-n',
    'm-esp-anormales','m-leuco','m-no-leuco'].forEach(id=>{
     document.getElementById(id).value = '';
   });
-  ['m-f','m-esp-normales','m-anom-total','m-p','m-leuco-total'].forEach(id=>{ document.getElementById(id).value = ''; });
+  ['m-f','m-esp-normales','m-anom-total','m-o','m-leuco-total'].forEach(id=>{ document.getElementById(id).value = ''; });
   showPage(0);
   computeAll();
   document.getElementById('obs-texto').value = '';
@@ -865,7 +872,6 @@ function loadDemo(){
   document.getElementById('m-k').value            = '14';
   document.getElementById('m-l').value            = '10';
   document.getElementById('m-n').value            = '158';
-  document.getElementById('m-o').value            = '42';
   document.getElementById('m-leuco').value        = '8';
   document.getElementById('m-no-leuco').value     = '192';
   computeAll();
