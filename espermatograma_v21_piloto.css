@@ -1706,3 +1706,18 @@
 .session-logout{ color:var(--ink-soft); text-decoration:underline; text-underline-offset:2px; }
 .session-logout:hover{ color:var(--accent); }
 @media print{ .session-box{ display:none !important; } }
+/* Tabla de paciente del PDF reducida: 6 datos en 3 columnas x 2 filas */
+@media print {
+  .print-patient-table .ppg.ppg-6{ grid-template-columns: 1.4fr 1.4fr 1fr !important; }
+  .print-patient-table .ppg.ppg-6 > .ppg-cell{
+    grid-column: auto !important;
+    border-right: 1px solid #e4e9f0 !important;
+    border-bottom: 1px solid #e4e9f0 !important;
+    background: #ffffff !important;
+  }
+  .print-patient-table .ppg.ppg-6 > .ppg-cell:nth-child(3n){ border-right: none !important; }
+  .print-patient-table .ppg.ppg-6 > .ppg-cell:nth-child(n+4){
+    border-bottom: none !important;
+    background: #f0f4f8 !important;
+  }
+}
