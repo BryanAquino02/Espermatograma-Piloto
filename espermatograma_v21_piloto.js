@@ -424,7 +424,7 @@ function computeAll(){
   // aa — RECUENTO TOTAL: a × b
   const aa = (isFinite(a) && isFinite(b)) ? a * b : NaN;
   setOut('out-b', b, 2, 'millones/ml');
-  setOut('out-aa', aa, 2, 'x10⁶/eyac.');
+  setOut('out-aa', aa, 2, 'millones/eyac.');
 
   // MOTILIDAD
   const fVal = anyMot ? f : NaN;
