@@ -471,29 +471,31 @@
               </div>
             </div>
           </div>
-          <div class="card" style="grid-column:1/-1">
-            <div class="card-label">Otras formas</div>
-            <div class="card-input-row">
-              <div class="card-value-box">
-                <input class="card-input" type="number" id="m-l" step="1" oninput="computeAll()">
-              </div>
-              <div class="card-stepper">
-                <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-l', -1)">–</button>
-                <div class="stepper-divider"></div>
-                <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-l', 1)">+</button>
+          <div style="grid-column:1/-1; display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+            <div class="card auto-card">
+              <div class="card-label">Espermatozoides normales</div>
+              <div class="card-input-row">
+                <input class="card-input auto-input" type="number" id="m-esp-normales" readonly tabindex="-1">
               </div>
             </div>
-          </div>
-          <div class="card auto-card">
-            <div class="card-label">Espermatozoides normales</div>
-            <div class="card-input-row">
-              <input class="card-input auto-input" type="number" id="m-esp-normales" readonly tabindex="-1">
+            <div class="card">
+              <div class="card-label">Otras formas</div>
+              <div class="card-input-row">
+                <div class="card-value-box">
+                  <input class="card-input" type="number" id="m-l" step="1" oninput="computeAll()">
+                </div>
+                <div class="card-stepper">
+                  <button type="button" class="stepper-btn" aria-label="Restar" onclick="stepCard('m-l', -1)">–</button>
+                  <div class="stepper-divider"></div>
+                  <button type="button" class="stepper-btn" aria-label="Sumar" onclick="stepCard('m-l', 1)">+</button>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="card auto-card">
-            <div class="card-label">Total de anomalías</div>
-            <div class="card-input-row">
-              <input class="card-input auto-input" type="number" id="m-anom-total" readonly tabindex="-1">
+            <div class="card auto-card">
+              <div class="card-label">Total de anomalías</div>
+              <div class="card-input-row">
+                <input class="card-input auto-input" type="number" id="m-anom-total" readonly tabindex="-1">
+              </div>
             </div>
           </div>
         </div>
