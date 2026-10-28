@@ -88,6 +88,15 @@ function setOut(id, value, decimals, unit){
   const el = document.getElementById(id);
   el.textContent = isFinite(value) ? value.toFixed(decimals) + (unit ? ' '+unit : '') : '—';
 }
+// Valores en millones: menores que 1 con 2 decimales (0.85 → 0.85);
+// si no, sin decimales si es entero (39.00 → 39) o 1 decimal (39.29 → 39.3)
+function setOutMillones(id, value, unit){
+  const el = document.getElementById(id);
+  if(!isFinite(value)){ el.textContent = '—'; return; }
+  if(value !== 0 && Math.abs(value) < 1){ el.textContent = value.toFixed(2) + ' ' + unit; return; }
+  const r = Math.round(value * 10) / 10;
+  el.textContent = (Number.isInteger(r) ? String(r) : r.toFixed(1)) + ' ' + unit;
+}
 // Suma ignorando los valores no numéricos (equivale a los reduce de v20)
 function sum(arr){
   return arr.reduce((acc, v) => isFinite(v) ? acc + v : acc, 0);
@@ -423,8 +432,8 @@ function computeAll(){
 
   // aa — RECUENTO TOTAL: a × b
   const aa = (isFinite(a) && isFinite(b)) ? a * b : NaN;
-  setOut('out-b', b, 2, 'millones/ml');
-  setOut('out-aa', aa, 2, 'millones/eyac.');
+  setOutMillones('out-b', b, 'millones/ml');
+  setOutMillones('out-aa', aa, 'millones/eyac.');
 
   // MOTILIDAD
   const fVal = anyMot ? f : NaN;
@@ -438,7 +447,7 @@ function computeAll(){
   setOut('out-bb', bb, 1, '%');
   setOut('out-motNoProg', motNoProg, 1, '%');
   setOut('out-noMot', noMot, 1, '%');
-  setOut('out-motProgTotal', motProgTotal, 2, 'millones');
+  setOutMillones('out-motProgTotal', motProgTotal, 'millones');
   drawMotilityPie(bb, motNoProg, noMot);
 
   // MORFOLOGÍA
@@ -478,7 +487,7 @@ function computeAll(){
   setOut('out-anomTotal', anormPct, 1, '%');   // espermatozoides anormales / total × 100
   // LEUCOCITOS: α × (µ/π) × 100
   const q = val('m-q');
-  setOut('out-celulas-redondas', q, 2, 'millones/ml');
+  setOutMillones('out-celulas-redondas', q, 'millones/ml');
   const leucResult = (isFinite(q) && isFinite(leuco) && leucoTotal > 0) ? q * (leuco / leucoTotal) : NaN;
   setOut('out-leucocitos', leucResult, 3, 'millones/ml');
 
