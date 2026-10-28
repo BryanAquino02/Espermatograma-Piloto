@@ -850,7 +850,7 @@ function loadDemo(){
   document.getElementById('m-a').value            = '3.2';
   document.getElementById('m-ph').value           = '7.4';
   document.getElementById('m-licuefaccion').value = 'completa';
-  document.getElementById('m-apariencia').value   = 'normal';
+  document.getElementById('m-apariencia').value   = 'gris-opalescente';
   document.getElementById('m-viscosidad').value   = 'normal';
   document.getElementById('m-aglutinacion').value = 'ausente';
   document.getElementById('m-b').value            = '22';
