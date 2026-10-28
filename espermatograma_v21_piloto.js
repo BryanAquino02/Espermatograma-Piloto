@@ -436,25 +436,39 @@ function computeAll(){
   drawMotilityPie(bb, motNoProg, noMot);
 
   // MORFOLOGÍA
-  const mVal = anyMorf ? m : NaN;
-  const atVal = pct(g, mVal);   // @ = g/m×100
+  // Total contado = espermatozoides normales + espermatozoides anormales.
+  // Morfología normal y formas anormales son % de ese total (suman 100 %).
+  // El % de formas anormales se reparte entre cabeza, pieza media, flagelo y
+  // otras formas en proporción a cuántas anomalías de cada tipo se contaron.
+  // Ej.: 20 normales y 80 anormales; anomalías 20 / 30 / 40 (total 90)
+  //      → Normal 20 %, Cabeza 80×20/90 = 17,8 %, Pieza 26,7 %, Flagelo 35,6 %.
+  const espAnorm = val('m-esp-anormales');
+  const totalEspz = sum([g, espAnorm]);
+  const atVal = pct(g, totalEspz);                 // normales / total × 100
+  const anormPct = pct(espAnorm, totalEspz);       // anormales / total × 100
+  const anomReparto = sum([h, i, j, l]);           // anomalías que se reparten el % anormal
+  function pctAnom(x){
+    return (isFinite(anormPct) && anomReparto > 0) ? anormPct * (isFinite(x) ? x : 0) / anomReparto : NaN;
+  }
+  function pctFila(x){ return isFinite(x) ? pctAnom(x) : NaN; }
   setOut('out-at', atVal, 1, '%');
-  setOut('out-anomCabeza', pct(h, mVal), 1, '%');
-  setOut('out-anomPieza',  pct(i, mVal), 1, '%');
-  setOut('out-anomFlagelo',pct(j, mVal), 1, '%');
-  setOut('out-inmaduros',  pct(k, mVal), 1, '%');
-  setOut('out-otros',      pct(l, mVal), 1, '%');
-  drawMorphologyPie(atVal, pct(h,mVal), pct(i,mVal), pct(j,mVal), pct(k,mVal), pct(l,mVal));
+  setOut('out-anomCabeza', pctFila(h), 1, '%');
+  setOut('out-anomPieza',  pctFila(i), 1, '%');
+  setOut('out-anomFlagelo',pctFila(j), 1, '%');
+  setOut('out-otros',      pctFila(l), 1, '%');
+  setOut('out-inmaduros',  pct(k, totalEspz), 1, '%');   // aparte: no forma parte del reparto
+  drawMorphologyPie(atVal, pctAnom(h), pctAnom(i), pctAnom(j), 0, pctAnom(l));
 
   // & — VITALIDAD: n/p×100
   const pVal = anyVit ? p : NaN;
   setOut('out-amp', pct(n, pVal), 1, '%');
 
-  // XY — Total anormales (usado internamente para el índice de teratozoospermia): h+i+j+k+l
+  // XY — Total de anomalías (usado para el índice de teratozoospermia): h+i+j+l
+  // (cabeza + pieza media + flagelo + otras formas; NO incluye inmaduros)
   const xy = sum([h,i,j,l]);
   const anyAnorm = [h,i,j,l].some(v => isFinite(v));
   document.getElementById('m-anom-total').value = anyAnorm ? xy : '';
-  setOut('out-anomTotal', anyAnorm ? pct(xy, mVal) : NaN, 1, '%');
+  setOut('out-anomTotal', anormPct, 1, '%');   // espermatozoides anormales / total × 100
   // LEUCOCITOS: α × (µ/π) × 100
   const q = val('m-q');
   setOut('out-celulas-redondas', q, 2, 'x10⁶/ml');
@@ -463,7 +477,7 @@ function computeAll(){
 
   // ÍNDICE DE TERATOZOOSPERMIA: total de anomalías / espermatozoides anormales
   const espAnormales = val('m-esp-anormales');
-  setOut('out-tzi', (isFinite(espAnormales) && espAnormales > 0 && [h,i,j].some(v => isFinite(v))) ? sum([h,i,j]) / espAnormales : NaN, 2, '');
+  setOut('out-tzi', (isFinite(espAnormales) && espAnormales > 0 && [h,i,j].some(v => isFinite(v))) ? sum([h,i,j]) / espAnormales : NaN, 2, '');   // (cabeza + pieza + flagelo) / anormales
   
   // BAR CHART
   drawBarChart(b, motTotal, atVal, pct(n, pVal));
