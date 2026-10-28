@@ -463,7 +463,7 @@ function computeAll(){
 
   // ÍNDICE DE TERATOZOOSPERMIA: total de anomalías / espermatozoides anormales
   const espAnormales = val('m-esp-anormales');
-  setOut('out-tzi', (anyAnorm && isFinite(espAnormales) && espAnormales > 0) ? xy / espAnormales : NaN, 2, '');
+  setOut('out-tzi', (isFinite(espAnormales) && espAnormales > 0 && [h,i,j].some(v => isFinite(v))) ? sum([h,i,j]) / espAnormales : NaN, 2, '');
   
   // BAR CHART
   drawBarChart(b, motTotal, atVal, pct(n, pVal));
