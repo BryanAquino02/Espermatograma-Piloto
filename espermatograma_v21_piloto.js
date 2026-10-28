@@ -783,6 +783,12 @@ computeAll();
 appReady = true;
 
 // Sync print patient table
+// El PDF solo muestra: paciente, cónyuge, abstinencia, tipo de muestra, médico y fecha.
+// setTxt ignora celdas que no estén en el HTML.
+function setTxt(id, texto){
+  const el = document.getElementById(id);
+  if(el) el.textContent = texto;
+}
 function syncPrintPatient(){
   const nombre = document.getElementById('p-nombre').value;
   const conyuge = document.getElementById('p-conyuge').value;
@@ -790,39 +796,23 @@ function syncPrintPatient(){
   const fecha = document.getElementById('p-fecha').value;
   const abstinencia = document.getElementById('p-abstinencia').value;
   const informe = document.getElementById('p-informe').value;
-  const referencia = document.getElementById('p-referencia').value;
-  const fechaNac = document.getElementById('p-fecha-nac').value;
-  const institucion = document.getElementById('p-institucion').value;
-  const operador = document.getElementById('p-operador').value;
-  const horaEmision = document.getElementById('p-hora-emision').value;
-  const horaRecepcion = document.getElementById('p-hora-recepcion').value;
-  const horaProcesamiento = document.getElementById('p-hora-procesamiento').value;
 
-  // Fila 1
-  document.getElementById('pp-nombre').textContent = nombre || '—';
-  const edadVal = document.getElementById('p-edad').value;
-  document.getElementById('pp-edad-line').textContent = edadVal || '';
-  document.getElementById('pp-referencia-display').textContent = referencia || '—';
-  document.getElementById('pp-conyuge').textContent = conyuge || '—';
-  document.getElementById('pp-medico').textContent = institucion || '—';
-  const medicoSubEl = document.getElementById('pp-medico-sub-display');
-  if(medicoSubEl) medicoSubEl.textContent = medico || '—';
+  setTxt('pp-nombre', nombre || '—');
+  setTxt('pp-conyuge', conyuge || '—');
+  setTxt('pp-medico-sub-display', medico || '—');
 
-  // Fila 2: cada dato en su propia celda
-  if(fecha){ const d = new Date(fecha + 'T00:00:00'); document.getElementById('pp-fecha-display').textContent = d.toLocaleDateString('es-PE', {day:'numeric', month:'short', year:'numeric'}); }
-  else { document.getElementById('pp-fecha-display').textContent = '—'; }
+  if(fecha){
+    const d = new Date(fecha + 'T00:00:00');
+    setTxt('pp-fecha-display', d.toLocaleDateString('es-PE', {day:'numeric', month:'short', year:'numeric'}));
+  } else {
+    setTxt('pp-fecha-display', '—');
+  }
 
-  document.getElementById('pp-abstinencia-display').textContent = abstinencia ? abstinencia + ' día' + (abstinencia == 1 ? '' : 's') : '—';
-
-  document.getElementById('pp-hora-e').textContent = horaEmision || '—';
-  document.getElementById('pp-hora-r').textContent = horaRecepcion || '—';
-  document.getElementById('pp-hora-p').textContent = horaProcesamiento || '—';
-
-  document.getElementById('pp-operador-display').textContent = operador || '—';
+  setTxt('pp-abstinencia-display', abstinencia ? abstinencia + ' día' + (abstinencia == 1 ? '' : 's') : '—');
 
   const tipoSel = document.getElementById('p-tipo-muestra');
-  document.getElementById('pp-tipo-muestra').textContent =
-    (tipoSel.value && tipoSel.selectedIndex >= 0) ? tipoSel.options[tipoSel.selectedIndex].text : '—';
+  setTxt('pp-tipo-muestra',
+    (tipoSel.value && tipoSel.selectedIndex >= 0) ? tipoSel.options[tipoSel.selectedIndex].text : '—');
 
   document.querySelectorAll('.js-informe-num').forEach(el => { el.textContent = informe || '—'; });
 }
